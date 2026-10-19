@@ -1,0 +1,9 @@
+node_modules/
+.next/
+# Jouw eigen gegevens (sleutels, profiel, blogs) blijven op je computer
+data/
+.env*
+*.log
+.DS_Store
+next-env.d.ts
+tsconfig.tsbuildinfo

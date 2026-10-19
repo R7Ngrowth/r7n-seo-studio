@@ -1,0 +1,88 @@
+/* R7N Blog — opmaak voor blogs uit R7N SEO Studio. Neemt het lettertype van je thema over; kleuren via Instellingen → R7N Blog. */
+.r7n-blog { --r7n-tekst: #3f464b; --r7n-kop: #15191c; --r7n-lijn: #e6e7e5; --r7n-zacht: #f6f5f2; color: var(--r7n-tekst); }
+.r7n-blog *, .r7n-blog *::before, .r7n-blog *::after { box-sizing: border-box; }
+
+/* ---------- volledige pagina: kop ---------- */
+.r7n-kop { position: relative; background: var(--r7n-donker); color: #d7dcdd; padding: clamp(40px, 6vw, 88px) clamp(18px, 4vw, 48px); }
+.r7n-kop::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: var(--r7n-accent); }
+.r7n-kop__wrap { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: clamp(28px, 5vw, 72px); align-items: center; }
+.r7n-kop__wrap:not(:has(.r7n-kop__beeld)) { grid-template-columns: minmax(0, 860px); }
+.r7n-kop__cat { display: inline-block; margin-bottom: 18px; font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--r7n-accent); text-decoration: none; }
+.r7n-blog .r7n-kop__titel { margin: 0; color: #fff; font-size: clamp(32px, 4.2vw, 56px); line-height: 1.08; letter-spacing: -.01em; }
+.r7n-kop__intro { margin: 20px 0 0; max-width: 58ch; font-size: clamp(17px, 1.4vw, 19px); line-height: 1.6; }
+.r7n-kop__meta { margin: 22px 0 0; font-size: 14px; opacity: .8; }
+.r7n-kop__beeld { margin: 0; }
+.r7n-kop__beeld img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 6px; box-shadow: 0 30px 60px -30px rgba(0, 0, 0, .7); }
+
+/* ---------- volledige pagina: lijf ---------- */
+.r7n-lijf { max-width: 1200px; margin: 0 auto; padding: clamp(40px, 6vw, 80px) clamp(18px, 4vw, 48px) 40px; display: grid; grid-template-columns: 250px minmax(0, 760px); gap: clamp(32px, 5vw, 72px); justify-content: center; }
+.r7n-lijf:not(:has(.r7n-toc)) { grid-template-columns: minmax(0, 760px); }
+.r7n-lijf .r7n-toc details { position: sticky; top: 110px; }
+
+/* ---------- inhoudsopgave ---------- */
+.r7n-toc { margin: 0 0 2em; }
+.r7n-toc details { border-top: 2px solid var(--r7n-kop); padding-top: 14px; }
+.r7n-toc summary { list-style: none; margin-bottom: 12px; font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--r7n-kop); cursor: pointer; }
+.r7n-toc summary::-webkit-details-marker { display: none; }
+.r7n-blog .r7n-toc ol { list-style: none; margin: 0; padding: 0; counter-reset: toc; }
+.r7n-blog .r7n-toc li { list-style: none; margin: 0; counter-increment: toc; border-bottom: 1px solid var(--r7n-lijn); }
+.r7n-toc a { display: grid; grid-template-columns: 26px 1fr; padding: 9px 0; font-size: 14.5px; line-height: 1.4; color: inherit; text-decoration: none; }
+.r7n-toc a::before { content: counter(toc, decimal-leading-zero); font-size: 12px; font-weight: 700; color: var(--r7n-accent); padding-top: 2px; }
+.r7n-toc a:hover { color: var(--r7n-kop); }
+
+/* ---------- tekst ---------- */
+.r7n-inhoud { font-size: 18px; line-height: 1.75; }
+.r7n-inhoud > p:first-child { font-size: 20px; line-height: 1.65; color: var(--r7n-kop); }
+.r7n-blog .r7n-inhoud h2 { margin: 2.1em 0 .55em; scroll-margin-top: 110px; font-size: clamp(26px, 2.5vw, 34px); line-height: 1.18; color: var(--r7n-kop); }
+.r7n-blog .r7n-inhoud h2::before { content: ""; display: block; width: 40px; height: 3px; margin-bottom: 16px; background: var(--r7n-accent); }
+.r7n-blog .r7n-inhoud h3 { margin: 1.5em 0 .4em; font-size: 21px; line-height: 1.3; color: var(--r7n-kop); }
+.r7n-inhoud a { color: var(--r7n-accent); text-decoration: underline; text-underline-offset: 3px; }
+.r7n-inhoud strong { color: var(--r7n-kop); }
+.r7n-blog .r7n-inhoud ul, .r7n-blog .r7n-inhoud ol { list-style: none; margin: 0 0 1.4em; padding: 0; }
+.r7n-blog .r7n-inhoud li { position: relative; list-style: none; margin: 0 0 .6em; padding-left: 32px; }
+.r7n-blog .r7n-inhoud ul > li::before { content: ""; position: absolute; left: 4px; top: .62em; width: 12px; height: 12px; border-radius: 50%; border: 3px solid var(--r7n-accent); }
+.r7n-blog .r7n-inhoud ol { counter-reset: lijst; }
+.r7n-blog .r7n-inhoud ol > li { counter-increment: lijst; }
+.r7n-blog .r7n-inhoud ol > li::before { content: counter(lijst); position: absolute; left: 0; top: .2em; width: 23px; height: 23px; border-radius: 50%; background: var(--r7n-donker); color: #fff; font-size: 12px; font-weight: 700; line-height: 23px; text-align: center; }
+.r7n-inhoud img { max-width: 100%; height: auto; border-radius: 6px; }
+
+/* ---------- tip ---------- */
+.r7n-tip { margin: 1.8em 0; padding: 20px 24px; background: var(--r7n-zacht); border-left: 4px solid var(--r7n-accent); border-radius: 0 6px 6px 0; }
+.r7n-blog .r7n-tip__titel { margin: 0 0 6px; font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--r7n-accent); }
+.r7n-tip__tekst p:last-child { margin-bottom: 0; }
+
+/* ---------- actieblok ---------- */
+.r7n-cta { position: relative; overflow: hidden; margin: 2.4em 0; padding: clamp(24px, 3.5vw, 38px); display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 20px 32px; align-items: center; background: var(--r7n-donker); border-radius: 6px; color: #d7dcdd; }
+.r7n-cta::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--r7n-accent); }
+.r7n-blog .r7n-cta p { margin: 0; }
+.r7n-cta__label { font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--r7n-accent); }
+.r7n-blog .r7n-cta__titel { margin-top: 8px; font-size: clamp(22px, 2.3vw, 28px); line-height: 1.2; color: #fff; }
+.r7n-blog .r7n-cta__p { margin-top: 8px; font-size: 16px; line-height: 1.6; }
+.r7n-blog .r7n-knop { display: inline-flex; align-items: center; gap: 10px; padding: 14px 22px; white-space: nowrap; background: var(--r7n-accent); color: #fff; text-decoration: none; font-size: 14px; font-weight: 700; border-radius: 4px; transition: transform .15s ease, filter .15s ease; }
+.r7n-blog .r7n-knop:hover { transform: translateY(-1px); filter: brightness(1.08); color: #fff; }
+
+/* ---------- veelgestelde vragen ---------- */
+.r7n-faq { margin: 0 0 1.6em; border-top: 1px solid var(--r7n-lijn); }
+.r7n-faq__item { border-bottom: 1px solid var(--r7n-lijn); }
+.r7n-faq__item summary { list-style: none; cursor: pointer; position: relative; padding: 18px 44px 18px 0; font-size: 18px; font-weight: 600; color: var(--r7n-kop); }
+.r7n-faq__item summary::-webkit-details-marker { display: none; }
+.r7n-faq__item summary::after { content: "+"; position: absolute; right: 4px; top: 50%; transform: translateY(-50%); width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--r7n-lijn); font-size: 18px; line-height: 26px; text-align: center; color: var(--r7n-accent); }
+.r7n-faq__item[open] summary::after { content: "–"; }
+.r7n-faq__antwoord { padding: 0 0 16px; }
+
+/* ---------- over ons ---------- */
+.r7n-team { margin: 3em 0 1em; padding: 24px; background: var(--r7n-zacht); border-radius: 6px; }
+.r7n-blog .r7n-team p { margin: 0 0 10px; font-size: 16px; line-height: 1.6; }
+.r7n-blog .r7n-team__titel { font-size: 20px; font-weight: 700; color: var(--r7n-kop); }
+.r7n-link { color: var(--r7n-accent); font-weight: 600; }
+
+/* ---------- tablet en mobiel ---------- */
+@media (max-width: 1024px) {
+	.r7n-kop__wrap, .r7n-lijf { grid-template-columns: minmax(0, 1fr); }
+	.r7n-lijf .r7n-toc details { position: static; }
+}
+@media (max-width: 640px) {
+	.r7n-inhoud { font-size: 17px; }
+	.r7n-cta { grid-template-columns: minmax(0, 1fr); }
+	.r7n-blog .r7n-knop { width: 100%; justify-content: center; white-space: normal; }
+}

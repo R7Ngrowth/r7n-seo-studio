@@ -1,0 +1,29 @@
+{
+  "name": "r7n-seo-studio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "R7N SEO Studio — zoek SEO-kansen, laat blogs schrijven en publiceer ze op je eigen website. Draait lokaal op je eigen computer.",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "lucide-react": "^1.55.0",
+    "marked": "^18.0.0",
+    "next": "16.3.7",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "sharp": "^0.34.5"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
