@@ -88,6 +88,15 @@ Vanaf nu krijgt elke blog een kop met afbeelding, inhoudsopgave, actieblok, tip 
 
 ---
 
+## 6b. Lokaal: je Google Bedrijfsprofielen (15 minuten, eens per maand)
+Voor winkels en bedrijven met een vestiging. Vraagt een DataForSEO-account (zie stap 0).
+1. Ga naar **Lokaal → Profielen**. Typ de naam en plaats van je bedrijf, zoals je het in Google Maps zou zoeken, en klik op **Zoek in Google**.
+2. Kies het juiste profiel. Vul je **vestigingspagina** in (de pagina op je site met adres en openingstijden) en 2 à 3 **zoekwoorden** zonder plaatsnaam, bijvoorbeeld "bakker, banketbakker". Herhaal dit voor elke vestiging.
+3. Ga naar **Lokaal → Analyse** en klik op **Analyseer bedrijfsprofielen**. Dit duurt 2 tot 4 minuten en kost ongeveer $0,03 per vestiging.
+4. Open een vestiging: bovenaan staan de **5 grootste kansen**. Daaronder de checklist, je positie in Maps vanaf vier punten rond de winkel, de concurrenten boven je en je reviews.
+5. Bij **Teksten om door te voeren** staan een nieuwe beschrijving, Google-berichten en antwoorden op open reviews. Kopieer ze en plak ze in je profiel op business.google.com.
+6. Doe de analyse eens per maand opnieuw en kijk of je score en positie stijgen.
+
 ## 7. Problemen oplossen
 | Melding | Oplossing |
 |---|---|

@@ -18,13 +18,14 @@ const VRAGEN: [string, ReactNode][] = [
   ["Moet mijn computer aan blijven?", <>Alleen terwijl je werkt. Ingeplande blogs zet je website zelf live.</>],
   ["De blog ziet er kaal uit op mijn site", <>Installeer de gratis WordPress-plugin <strong>R7N Blog</strong> en zet bij Instellingen &quot;De plugin R7N Blog staat op mijn site&quot; aan. Dan krijgen al je blogs een vaste opmaak met inhoudsopgave, actieblokken en uitklapbare vragen.</>],
   ["WordPress zegt dat de inlog niet klopt", <>Gebruik de gebruikersnaam van het account waar je het Application Password hebt gemaakt (vaak je e-mailadres), niet de naam van het wachtwoord.</>],
+  ["Wat doet Lokaal?", <>Lokaal analyseert je Google Bedrijfsprofielen (één per vestiging). Je voegt ze toe bij <Link href="/lokaal/profielen" className="text-accent underline">Lokaal → Profielen</Link>, met je vestigingspagina en een paar zoekwoorden zoals &quot;bakker&quot;. De studio meet je positie in Google Maps vanaf vier punten op ±2 km rond de winkel (zo zoekt een klant vanuit huis), vergelijkt je met de concurrenten boven je, leest je nieuwste reviews en checkt of telefoon en openingstijden gelijk zijn aan je site. Je krijgt een score, de vijf grootste kansen en kant-en-klare teksten: een nieuwe beschrijving, Google-berichten en antwoorden op open reviews. Lokaal heeft DataForSEO nodig en kost ongeveer $0,03 per vestiging.</>],
   ["Ik heb meerdere websites of klanten", <>Maak per website een eigen kopie van de studio-map. Wil je alles op één plek zien en voor meerdere klanten werken? Dan is een eigen Mission Control de volgende stap.</>],
 ];
 
 export default function Hulp() {
   return (
     <>
-      <Hero nummer="VIII" label="Hoe werkt het" title="Hoe werkt het" lines={["Van kans tot blog op je site in vijf stappen."]} />
+      <Hero nummer="IX" label="Hoe werkt het" title="Hoe werkt het" lines={["Van kans tot blog op je site in vijf stappen."]} />
       <ol className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
         {STAPPEN.map((s, i) => (
           <li key={s.titel} className="kaart p-5">

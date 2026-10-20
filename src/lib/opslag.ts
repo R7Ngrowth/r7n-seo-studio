@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { chmod, mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
+import type { LokaalAnalyse, Vestiging } from "./lokaal";
 import type { Blog, Instellingen, Kansenrapport, Logregel } from "./types";
 
 // Lokale opslag: kleine JSON-bestanden in data/. Geen database nodig; de gebruiker kan de map zelf back-uppen.
@@ -113,6 +114,39 @@ export async function wijzigBlog(id: string, wijziging: Partial<Blog>): Promise<
 
 export async function verwijderBlog(id: string) {
   await schrijf("blogs.json", (await lees<Blog[]>("blogs.json", [])).filter((b) => b.id !== id));
+}
+
+/* ------------------------------ lokaal (bedrijfsprofielen) ------------------------------ */
+
+export const profielen = () => lees<Vestiging[]>("profielen.json", []);
+
+export async function voegProfielToe(p: Omit<Vestiging, "id" | "aangemaakt">): Promise<Vestiging> {
+  const lijst = await profielen();
+  if (lijst.some((x) => x.cid === p.cid)) throw new Error("Dit profiel staat er al bij.");
+  const nieuw: Vestiging = { ...p, id: randomUUID(), aangemaakt: new Date().toISOString() };
+  await schrijf("profielen.json", [...lijst, nieuw]);
+  return nieuw;
+}
+
+export async function wijzigProfiel(id: string, w: Partial<Pick<Vestiging, "pagina_url" | "zoekwoorden" | "naam">>) {
+  const lijst = await profielen();
+  const i = lijst.findIndex((p) => p.id === id);
+  if (i < 0) throw new Error("Profiel niet gevonden");
+  lijst[i] = { ...lijst[i], ...w };
+  await schrijf("profielen.json", lijst);
+}
+
+export const verwijderProfiel = async (id: string) => schrijf("profielen.json", (await profielen()).filter((p) => p.id !== id));
+
+// De laatste 12 analyses blijven bewaard (nieuwste eerst), zodat je later kunt vergelijken.
+export const lokaalAnalyse = async () => (await lees<LokaalAnalyse[]>("lokaal.json", []))[0] ?? null;
+
+export async function bewaarLokaal(a: LokaalAnalyse): Promise<LokaalAnalyse> {
+  const lijst = await lees<LokaalAnalyse[]>("lokaal.json", []);
+  const met = a.id ? a : { ...a, id: randomUUID() };
+  const rest = lijst.filter((x) => x.id !== met.id);
+  await schrijf("lokaal.json", [met, ...rest].slice(0, 12));
+  return met;
 }
 
 /* ------------------------------ kansen + logboek ------------------------------ */

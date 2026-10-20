@@ -15,7 +15,7 @@ export default async function Instellingen() {
   const heeft = { ai: !!i.ai.sleutel, dfs: !!i.dfs.wachtwoord, wp: !!i.koppeling.wpWachtwoord, shop: !!i.koppeling.shopToken, api: !!i.koppeling.apiSleutel };
   return (
     <>
-      <Hero nummer="VII" label="Instellingen" title="Instellingen" lines={["Alles staat op deze computer, in de map data/. Sleutels en wachtwoorden worden nooit gedeeld."]} />
+      <Hero nummer="VIII" label="Instellingen" title="Instellingen" lines={["Alles staat op deze computer, in de map data/. Sleutels en wachtwoorden worden nooit gedeeld."]} />
       <Formulier begin={veilig} heeft={heeft} />
     </>
   );

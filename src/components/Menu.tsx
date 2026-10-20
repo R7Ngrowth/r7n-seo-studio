@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpen, CalendarClock, FileText, LayoutDashboard, PenLine, Radar, Radio, Settings } from "lucide-react";
+import { BookOpen, CalendarClock, FileText, LayoutDashboard, MapPin, PenLine, Radar, Radio, Settings } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
@@ -13,6 +13,7 @@ const ITEMS = [
   { href: "/concepten", label: "Concepten", icoon: FileText },
   { href: "/planning", label: "Planning", icoon: CalendarClock },
   { href: "/live", label: "Live", icoon: Radio },
+  { href: "/lokaal", label: "Lokaal", icoon: MapPin },
   { href: "/instellingen", label: "Instellingen", icoon: Settings },
   { href: "/hulp", label: "Hoe werkt het", icoon: BookOpen },
 ];
@@ -49,7 +50,7 @@ export function Menu({ site, children }: { site: string; children: ReactNode }) 
         </nav>
         <div className="mt-auto space-y-1 px-2 text-[11px] text-muted">
           {site && <div className="truncate">{site.replace(/^https?:\/\//, "")}</div>}
-          <div className="lbl !text-[9px]">Lokaal · v1.0</div>
+          <div className="lbl !text-[9px]">Op je computer · v1.1</div>
         </div>
       </aside>
       <main className="min-w-0 px-4 pb-24 pt-6 md:px-8 md:pb-10">{children}</main>

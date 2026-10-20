@@ -131,6 +131,6 @@ export interface Kansenrapport {
 
 export interface Logregel {
   tijd: string;
-  soort: "setup" | "analyse" | "blog" | "publicatie" | "fout";
+  soort: "setup" | "analyse" | "blog" | "publicatie" | "fout" | "lokaal";
   tekst: string;
 }
