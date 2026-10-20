@@ -1,18 +1,20 @@
 "use client";
 
-import { Check, CheckCircle2, Globe, Loader2, Plug, Rocket, Sparkles } from "lucide-react";
+import { Check, CheckCircle2, Globe, Loader2, MapPin, Plug, Plus, Rocket, Search, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, type ReactNode } from "react";
-import { CmsUitleg, OpenRouterUitleg } from "@/components/Uitleg";
+import { CmsUitleg, DataForSeoUitleg, OpenRouterUitleg } from "@/components/Uitleg";
 import { MODELLEN, type Cms, type Koppeling, type Profiel } from "@/lib/types";
-import { analyseer, rondAf, testKoppeling } from "./actions";
+import type { Zoekresultaat } from "@/lib/lokaal";
+import { voegToe, zoek } from "../lokaal/acties";
+import { analyseer, bewaarDfs, rondAf, testKoppeling } from "./actions";
 
-const STAPPEN = ["Website", "Profiel", "Koppeling", "Klaar"];
+const STAPPEN = ["Website", "Profiel", "Koppeling", "Lokaal", "Klaar"];
 
-export function Wizard({ begin }: { begin: { website: string; sleutelAanwezig: boolean; stap?: number } }) {
+export function Wizard({ begin }: { begin: { website: string; sleutelAanwezig: boolean; dfsAanwezig?: boolean; stap?: number } }) {
   const router = useRouter();
   const [stap, setStap] = useState(begin.stap ?? 0);
-  const [bezig, setBezig] = useState<"analyse" | "test" | "opslaan" | null>(null);
+  const [bezig, setBezig] = useState<"analyse" | "test" | "opslaan" | "dfs" | "zoek" | "toevoegen" | null>(null);
   const [fout, setFout] = useState<string | null>(null);
 
   const [adres, setAdres] = useState(begin.website);
@@ -29,6 +31,17 @@ export function Wizard({ begin }: { begin: { website: string; sleutelAanwezig: b
   const zetK = (veld: keyof Koppeling, v: string) => setK((x) => ({ ...x, [veld]: v }));
   const [herkend, setHerkend] = useState<Cms>("geen");
   const [test, setTest] = useState<{ ok: boolean; tekst: string } | null>(null);
+
+  // Stap Lokaal (optioneel): DataForSEO + je Google Bedrijfsprofiel(en).
+  const [dfsLogin, setDfsLogin] = useState("");
+  const [dfsWw, setDfsWw] = useState("");
+  const [dfsOk, setDfsOk] = useState(begin.dfsAanwezig ?? false);
+  const [vraag, setVraag] = useState("");
+  const [gevonden, setGevonden] = useState<Zoekresultaat[] | null>(null);
+  const [gekozen, setGekozen] = useState<Zoekresultaat | null>(null);
+  const [vestigingspagina, setVestigingspagina] = useState("");
+  const [woorden, setWoorden] = useState("");
+  const [toegevoegd, setToegevoegd] = useState<string[]>([]);
 
   async function doeAnalyse() {
     setBezig("analyse");
@@ -53,6 +66,45 @@ export function Wizard({ begin }: { begin: { website: string; sleutelAanwezig: b
     const r = await testKoppeling(k);
     setBezig(null);
     setTest(r.ok ? { ok: true, tekst: r.data } : { ok: false, tekst: r.fout });
+  }
+
+  async function doeDfs() {
+    setBezig("dfs");
+    setFout(null);
+    const r = await bewaarDfs(dfsLogin, dfsWw);
+    setBezig(null);
+    if (!r.ok) return setFout(r.fout);
+    setDfsOk(true);
+    setDfsWw("");
+    if (!vraag) setVraag(profiel.naam);
+  }
+
+  async function doeZoek() {
+    setBezig("zoek");
+    setFout(null);
+    setGekozen(null);
+    const r = await zoek(vraag || profiel.naam);
+    setBezig(null);
+    if (r.ok) setGevonden(r.data);
+    else setFout(r.fout);
+  }
+
+  function kies(r: Zoekresultaat) {
+    setGekozen(r);
+    setVestigingspagina(profiel.website);
+    setWoorden([...new Set([r.categorie, ...r.extra].map((c) => c.toLowerCase()).filter(Boolean))].slice(0, 3).join(", "));
+  }
+
+  async function doeToevoegen() {
+    if (!gekozen) return;
+    setBezig("toevoegen");
+    setFout(null);
+    const r = await voegToe(gekozen, vestigingspagina, woorden.split(",").map((w) => w.trim()).filter(Boolean));
+    setBezig(null);
+    if (!r.ok) return setFout(r.fout);
+    setToegevoegd((l) => [...l, gekozen.naam]);
+    setGekozen(null);
+    setGevonden(null);
   }
 
   async function afronden() {
@@ -287,6 +339,88 @@ export function Wizard({ begin }: { begin: { website: string; sleutelAanwezig: b
       )}
 
       {stap === 3 && (
+        <Kaart
+          icoon={<MapPin className="h-4 w-4" />}
+          titel="Lokaal: je Google Bedrijfsprofiel (optioneel)"
+          uitleg="Heb je een winkel of vestiging? Dan analyseert de studio ook je Google Bedrijfsprofiel: je positie in Google Maps, concurrenten, reviews en wat je kunt verbeteren. Hiervoor heb je een DataForSEO-account nodig. Je kunt dit ook overslaan en later doen bij Lokaal."
+        >
+          {!dfsOk ? (
+            <>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Veld label="DataForSEO API-login" noot="Meestal je e-mailadres. Te vinden op app.dataforseo.com → API Access.">
+                  <input value={dfsLogin} onChange={(e) => setDfsLogin(e.target.value)} className="veld" autoComplete="off" />
+                </Veld>
+                <Veld label="DataForSEO API-wachtwoord" noot="Niet je inlogwachtwoord: kies op API Access voor 'Send by e-mail'.">
+                  <input type="password" value={dfsWw} onChange={(e) => setDfsWw(e.target.value)} className="veld" autoComplete="off" />
+                </Veld>
+              </div>
+              <button type="button" onClick={doeDfs} disabled={bezig !== null} className="btn mt-4">
+                {bezig === "dfs" ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plug className="h-4 w-4" />} Controleer DataForSEO
+              </button>
+              <DataForSeoUitleg />
+            </>
+          ) : (
+            <>
+              <p className="mb-3 flex items-center gap-1.5 text-xs text-ok">
+                <CheckCircle2 className="h-3.5 w-3.5" /> DataForSEO is gekoppeld.
+              </p>
+              {toegevoegd.length > 0 && (
+                <div className="melding melding-normaal mb-4 px-4 py-3 text-xs text-muted">
+                  Toegevoegd: {toegevoegd.join(", ")}. Heb je meer vestigingen? Zoek de volgende op.
+                </div>
+              )}
+              {!gekozen && (
+                <div className="flex flex-wrap gap-2.5">
+                  <input value={vraag} onChange={(e) => setVraag(e.target.value)} placeholder="Bedrijfsnaam en plaats" className="veld min-w-0 flex-1" />
+                  <button type="button" onClick={doeZoek} disabled={bezig !== null} className="btn">
+                    {bezig === "zoek" ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />} Zoek in Google
+                  </button>
+                </div>
+              )}
+              {gevonden && !gekozen && (
+                <div className="mt-3 space-y-2">
+                  {gevonden.length === 0 && <p className="text-sm text-muted">Niets gevonden. Probeer de naam met de plaats erbij.</p>}
+                  {gevonden.map((r) => (
+                    <div key={r.cid} className="flex flex-wrap items-center gap-3 rounded-xl border border-line px-4 py-3">
+                      <div className="min-w-0 flex-1">
+                        <div className="text-sm font-medium">{r.naam}</div>
+                        <div className="text-xs text-muted">{r.adres}</div>
+                      </div>
+                      <button type="button" onClick={() => kies(r)} className="btn !py-1.5 text-xs">
+                        <Plus className="h-3.5 w-3.5" /> Dit is mijn bedrijf
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {gekozen && (
+                <div className="rounded-xl border border-accent/40 bg-accent/5 p-4">
+                  <div className="mb-3 text-sm font-medium">{gekozen.naam}</div>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <Veld label="Pagina met adres en openingstijden" noot="Bijv. je contactpagina of vestigingspagina.">
+                      <input value={vestigingspagina} onChange={(e) => setVestigingspagina(e.target.value)} className="veld" />
+                    </Veld>
+                    <Veld label="Zoekwoorden (met komma)" noot="Zonder plaatsnaam, bijv. 'bakker, banketbakker'.">
+                      <input value={woorden} onChange={(e) => setWoorden(e.target.value)} className="veld" />
+                    </Veld>
+                  </div>
+                  <div className="mt-4 flex justify-end gap-2">
+                    <button type="button" onClick={() => setGekozen(null)} className="btn-stil !text-muted hover:!text-text">
+                      Annuleren
+                    </button>
+                    <button type="button" onClick={doeToevoegen} disabled={bezig !== null} className="btn btn-vol">
+                      {bezig === "toevoegen" ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />} Toevoegen
+                    </button>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+          <Navigatie terug={() => setStap(2)} verder={() => setStap(4)} verderTekst={toegevoegd.length ? "Volgende" : "Overslaan"} />
+        </Kaart>
+      )}
+
+      {stap === 4 && (
         <Kaart icoon={<Rocket className="h-4 w-4" />} titel="Klaar om te beginnen" uitleg="Controleer en sla op. Alles wat je invulde staat alleen op deze computer.">
           <dl className="space-y-2 rounded-xl border border-line/70 bg-surface/60 p-4 text-sm">
             <Rij label="Bedrijf" waarde={profiel.naam || "—"} />
@@ -305,13 +439,15 @@ export function Wizard({ begin }: { begin: { website: string; sleutelAanwezig: b
                       : "Later"
               }
             />
+            <Rij label="Lokaal" waarde={toegevoegd.length ? `${toegevoegd.length} bedrijfsprofiel${toegevoegd.length === 1 ? "" : "en"}` : "Later"} />
             <Rij label="Schrijver · beeld" waarde={`${MODELLEN.tekst.find((m) => m.id === tekstmodel)?.naam} · ${MODELLEN.beeld.find((m) => m.id === beeldmodel)?.naam}`} />
           </dl>
           <p className="mt-4 text-sm text-muted">
-            Volgende stap: ga naar <strong className="text-text">Kansen</strong> en laat de studio uitzoeken waar jouw klanten op zoeken.
+            Volgende stap: ga naar <strong className="text-text">Kansen</strong> en laat de studio uitzoeken waar jouw klanten op zoeken
+            {toegevoegd.length ? <>, en naar <strong className="text-text">Lokaal</strong> voor je bedrijfsprofiel</> : null}.
           </p>
           <div className="mt-6 flex justify-between">
-            <button type="button" onClick={() => setStap(2)} className="btn-stil !text-muted hover:!text-text">
+            <button type="button" onClick={() => setStap(3)} className="btn-stil !text-muted hover:!text-text">
               Terug
             </button>
             <button type="button" onClick={afronden} disabled={bezig !== null} className="btn btn-vol">
@@ -347,7 +483,7 @@ function Veld({ label, noot, breed = false, children }: { label: string; noot?: 
   );
 }
 
-function Navigatie({ terug, verder, kanVerder = true, noot }: { terug: () => void; verder: () => void; kanVerder?: boolean; noot?: string }) {
+function Navigatie({ terug, verder, kanVerder = true, noot, verderTekst = "Volgende" }: { terug: () => void; verder: () => void; kanVerder?: boolean; noot?: string; verderTekst?: string }) {
   return (
     <div className="mt-6 flex items-center justify-between gap-3">
       <button type="button" onClick={terug} className="btn-stil !text-muted hover:!text-text">
@@ -356,7 +492,7 @@ function Navigatie({ terug, verder, kanVerder = true, noot }: { terug: () => voi
       <span className="flex items-center gap-3">
         {noot && <span className="text-xs text-muted">{noot}</span>}
         <button type="button" onClick={verder} disabled={!kanVerder} className="btn btn-vol">
-          Volgende
+          {verderTekst}
         </button>
       </span>
     </div>

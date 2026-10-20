@@ -5,6 +5,7 @@ import { bewaarInstellingen, instellingen, log } from "@/lib/opslag";
 import { analyseerWebsite, type Websiteanalyse } from "@/lib/profiel";
 import type { Koppeling, Opmaak, Profiel } from "@/lib/types";
 import { plek } from "@/lib/plek";
+import { dfsSaldo } from "@/lib/zoekwoorden";
 
 type Uitkomst<T> = { ok: true; data: T } | { ok: false; fout: string };
 const mis = (e: unknown) => ({ ok: false as const, fout: e instanceof Error ? e.message : String(e) });
@@ -38,6 +39,19 @@ export async function rondAf(profiel: Profiel, koppeling: Koppeling, opmaak: Opm
     await bewaarInstellingen({ klaar: true, profiel, koppeling, opmaak });
     await log("setup", `Studio ingesteld voor ${profiel.website}`);
     return { ok: true, data: null };
+  } catch (e) {
+    return mis(e);
+  }
+}
+
+// Optionele stap Lokaal: DataForSEO-login controleren (gratis aanroep) en bewaren.
+export async function bewaarDfs(login: string, wachtwoord: string): Promise<Uitkomst<number | null>> {
+  try {
+    const d = { login: login.trim(), wachtwoord: wachtwoord.trim() };
+    if (!d.login || !d.wachtwoord) throw new Error("Vul je DataForSEO API-login en API-wachtwoord in.");
+    const saldo = await dfsSaldo(d);
+    await bewaarInstellingen({ dfs: d });
+    return { ok: true, data: saldo };
   } catch (e) {
     return mis(e);
   }

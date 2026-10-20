@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertTriangle, Check, ChevronDown, Copy, Loader2, MapPin, MessageSquare, Radar, RefreshCw, Sparkles, Star, X } from "lucide-react";
+import { AlertTriangle, Check, ChevronDown, Copy, Loader2, MapPin, MessageSquare, Radar, RefreshCw, Sparkles, Star, Wand2, X } from "lucide-react";
 import Link from "next/link";
 import { useState, type ReactNode } from "react";
 import { Bezig } from "@/components/Bezig";
@@ -350,9 +350,14 @@ export function LokaalView({
               {bezig === "reviews" ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />} Reviews bijwerken
             </button>
           )}
-          <button onClick={start} disabled={bezig !== null || !aantalProfielen || !dfs.werkt} className="btn btn-vol">
+          <button onClick={start} disabled={bezig !== null || !aantalProfielen || !dfs.werkt} className={a ? "btn" : "btn btn-vol"}>
             <Radar className="h-4 w-4" /> {a ? "Opnieuw analyseren" : "Analyseer bedrijfsprofielen"}
           </button>
+          {a && (
+            <Link href="/lokaal/oplossen" className="btn btn-vol">
+              <Wand2 className="h-4 w-4" /> Los alles op
+            </Link>
+          )}
         </div>
       </div>
 

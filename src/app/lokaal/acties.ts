@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { analyseerProfielen, gebruikDfs, werkReviewsBij, zoekProfielen, type LokaalAnalyse, type ProfielAnalyse, type Zoekresultaat } from "@/lib/lokaal";
 import { plaatsUit, schrijfTeksten } from "@/lib/lokaal-teksten";
-import { bewaarLokaal, instellingen, log, lokaalAnalyse, profielen, verwijderProfiel, voegProfielToe, wijzigProfiel } from "@/lib/opslag";
+import { bewaarLokaal, instellingen, log, lokaalAnalyse, profielen, verwijderProfiel, voegProfielToe, wijzigProfiel, zetSuggestie, type SuggestieStand } from "@/lib/opslag";
 import type { Instellingen } from "@/lib/types";
 
 type Uitkomst<T> = { ok: true; data: T } | { ok: false; fout: string };
@@ -138,6 +138,16 @@ export async function tekstenOpnieuw(profielId: string): Promise<Uitkomst<Lokaal
     const opgeslagen = await bewaarLokaal(a);
     ververs();
     return { ok: true, data: opgeslagen };
+  } catch (e) {
+    return mis(e);
+  }
+}
+
+/* ------------------------------ Los alles op (suggesties) ------------------------------ */
+
+export async function markeerSuggestie(id: string, w: { status?: "open" | "gedaan" | "overgeslagen"; tekst?: string }): Promise<Uitkomst<SuggestieStand>> {
+  try {
+    return { ok: true, data: await zetSuggestie(id, w) };
   } catch (e) {
     return mis(e);
   }

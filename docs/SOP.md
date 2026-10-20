@@ -13,11 +13,11 @@
 | **Node.js (LTS)** | [nodejs.org](https://nodejs.org) → download LTS → installeren | Eenmalig |
 | **OpenRouter-sleutel** | [openrouter.ai](https://openrouter.ai) → Credits: zet $10 tegoed → [Keys](https://openrouter.ai/settings/keys) → **Create Key** → Credit limit $10, **Monthly** | Kies **Keys**, niet *Management Keys*. Je ziet de sleutel één keer: bewaar hem. |
 | **Toegang tot je website** | Zie stap 3 | — |
-| **DataForSEO** (optioneel) | [dataforseo.com](https://app.dataforseo.com/register) → tegoed storten → API Access → **Send by e-mail** | Het API-wachtwoord is níet je inlogwachtwoord |
+| **DataForSEO** (optioneel voor Kansen, **nodig voor Lokaal**) | [dataforseo.com](https://app.dataforseo.com/register) → tegoed opwaarderen via Billing (minimaal $50; nieuw account heeft een klein proeftegoed) → API Access → **Send by e-mail** | Het API-wachtwoord is níet je inlogwachtwoord |
 
 **Waarom OpenRouter?** Eén account waarmee de studio de beste AI gebruikt: Claude schrijft, OpenAI maakt de afbeeldingen. Je betaalt alleen wat je gebruikt.
 
-**Waarom DataForSEO?** Zonder weet de studio wel waar mensen op zoeken, maar niet hoe vaak. Met DataForSEO kiest hij onderwerpen die echt bezoekers opleveren en vermijdt hij termen waar niemand op zoekt of waar je nooit van grote sites wint. Optioneel, maar aangeraden zodra je er serieus mee aan de slag gaat.
+**Waarom DataForSEO?** Zonder weet de studio wel waar mensen op zoeken, maar niet hoe vaak. Met DataForSEO kiest hij onderwerpen die echt bezoekers opleveren en vermijdt hij termen waar niemand op zoekt of waar je nooit van grote sites wint. Voor Kansen optioneel, maar aangeraden zodra je er serieus mee aan de slag gaat. Voor Lokaal (je Google Bedrijfsprofiel) is het nodig: alle data over je profiel komt daarvandaan.
 
 ---
 
@@ -89,12 +89,14 @@ Vanaf nu krijgt elke blog een kop met afbeelding, inhoudsopgave, actieblok, tip 
 ---
 
 ## 6b. Lokaal: je Google Bedrijfsprofielen (15 minuten, eens per maand)
-Voor winkels en bedrijven met een vestiging. Vraagt een DataForSEO-account (zie stap 0).
+Voor winkels en bedrijven met een vestiging. Vraagt een DataForSEO-account **met tegoed** (zie stap 0): een nieuw account heeft een klein proeftegoed, daarna waardeer je op via Billing (minimaal $50). Je kunt je bedrijfsprofiel ook al toevoegen in de startwizard (stap Lokaal).
 1. Ga naar **Lokaal → Profielen**. Typ de naam en plaats van je bedrijf, zoals je het in Google Maps zou zoeken, en klik op **Zoek in Google**.
 2. Kies het juiste profiel. Vul je **vestigingspagina** in (de pagina op je site met adres en openingstijden) en 2 à 3 **zoekwoorden** zonder plaatsnaam, bijvoorbeeld "bakker, banketbakker". Herhaal dit voor elke vestiging.
 3. Ga naar **Lokaal → Analyse** en klik op **Analyseer bedrijfsprofielen**. Dit duurt 2 tot 4 minuten en kost ongeveer $0,03 per vestiging.
 4. Open een vestiging: bovenaan staan de **5 grootste kansen**. Daaronder de checklist, je positie in Maps vanaf vier punten rond de winkel, de concurrenten boven je en je reviews.
-5. Bij **Teksten om door te voeren** staan een nieuwe beschrijving, Google-berichten en antwoorden op open reviews. Kopieer ze en plak ze in je profiel op business.google.com.
+5. Klik op **Los alles op**. Per vestiging staat alles klaar: een nieuwe beschrijving, extra categorieën, de link naar je eigen pagina (met meetcode), antwoorden op open reviews en Google-berichten voor de komende weken. Bij elk punt staat waar je het in je profiel aanpast.
+   - Log in op Google met het account dat beheerder is van je profiel, klik op **Open profiel**, kopieer de tekst, plak hem en vink **Gedaan** aan.
+   - Automatisch doorvoeren kan niet: daarvoor is een eigen Google Cloud-project met goedgekeurde Business Profile API nodig. Je voert het dus zelf door.
 6. Doe de analyse eens per maand opnieuw en kijk of je score en positie stijgen.
 
 ## 7. Problemen oplossen

@@ -61,7 +61,12 @@ export function DataForSeoUitleg() {
     <Blok titel="Wat is DataForSEO, en heb ik het nodig?">
       <p>
         <strong>Wat het doet:</strong> DataForSEO levert echte cijfers uit Google: hoeveel mensen per maand op een zoekwoord zoeken, hoe moeilijk het is om daarop
-        bovenaan te komen en wat adverteerders ervoor betalen. De studio gebruikt dit bij <strong>Kansen</strong>.
+        bovenaan te komen en wat adverteerders ervoor betalen. De studio gebruikt dit bij <strong>Kansen</strong> en bij <strong>Lokaal</strong> (je Google
+        Bedrijfsprofiel, je positie in Google Maps, concurrenten en reviews).
+      </p>
+      <p>
+        <strong>Voor Kansen optioneel, voor Lokaal nodig:</strong> Kansen werkt ook zonder (op Google-suggesties). Lokaal kan niet zonder DataForSEO: daar komt alle
+        data over je bedrijfsprofiel vandaan.
       </p>
       <p>
         <strong>Waarom je het wilt:</strong> zonder cijfers weet je wél waar mensen op zoeken (Google-suggesties), maar niet hoe vaak. Met DataForSEO kiest de studio
@@ -69,13 +74,14 @@ export function DataForSeoUitleg() {
         daardoor veel betrouwbaarder.
       </p>
       <p>
-        <strong>De nuance:</strong> het is optioneel. Voor een eerste start werken Google-suggesties prima. DataForSEO vraagt een eerste storting van minimaal $50,
-        die niet verloopt; een analyse kost ongeveer $0,10–$0,20, dus daar doe je heel lang mee. De cijfers zijn schattingen (net als bij elke SEO-tool) en voor
+        <strong>Kosten en tegoed:</strong> een nieuw account krijgt meestal een klein proeftegoed (ongeveer $1), genoeg om het uit te proberen. Daarna moet je zelf
+        tegoed opwaarderen (Billing → minimaal $50, het verloopt niet). Een Kansen-analyse kost ongeveer $0,10–$0,20, een Lokaal-analyse ongeveer $0,03 per
+        vestiging, dus daar doe je heel lang mee. Is het tegoed op, dan meldt de studio dat. De cijfers zijn schattingen (net als bij elke SEO-tool) en voor
         kleine, lokale zoekwoorden soms 0 of onbekend, terwijl er toch af en toe op gezocht wordt.
       </p>
       <ol className="list-decimal space-y-1.5 pl-4">
         <li>
-          Maak een account op <Ext href="https://app.dataforseo.com/register">dataforseo.com</Ext> en zet tegoed op je account.
+          Maak een account op <Ext href="https://app.dataforseo.com/register">dataforseo.com</Ext>. Waardeer op via <Ext href="https://app.dataforseo.com/billing">Billing</Ext> zodra het proeftegoed op is.
         </li>
         <li>
           Ga naar <Ext href="https://app.dataforseo.com/api-access">API Access</Ext>. Je API-login is meestal je e-mailadres.
@@ -83,7 +89,7 @@ export function DataForSeoUitleg() {
         <li>
           Klik <strong>Send by e-mail</strong>: je krijgt je <strong>API-wachtwoord</strong> per mail. Dat is een ander wachtwoord dan waarmee je inlogt.
         </li>
-        <li>Vul login en API-wachtwoord hierboven in, sla op en klik Test DataForSEO.</li>
+        <li>Vul login en API-wachtwoord in bij Instellingen (of in de startwizard bij Lokaal), sla op en klik Test DataForSEO. Het tegoed staat daarna bovenaan bij Lokaal.</li>
       </ol>
     </Blok>
   );

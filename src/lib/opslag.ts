@@ -149,6 +149,17 @@ export async function bewaarLokaal(a: LokaalAnalyse): Promise<LokaalAnalyse> {
   return met;
 }
 
+// Wat je met de suggesties van Los alles op hebt gedaan (gedaan / overgeslagen), plus je eigen aanpassingen aan de tekst.
+export type SuggestieStand = Record<string, { status?: "open" | "gedaan" | "overgeslagen"; tekst?: string }>;
+export const suggestieStand = () => lees<SuggestieStand>("lokaal-suggesties.json", {});
+
+export async function zetSuggestie(id: string, w: { status?: "open" | "gedaan" | "overgeslagen"; tekst?: string }) {
+  const nu = await suggestieStand();
+  nu[id] = { ...nu[id], ...w };
+  await schrijf("lokaal-suggesties.json", nu);
+  return nu;
+}
+
 /* ------------------------------ kansen + logboek ------------------------------ */
 
 export const kansenrapport = () => lees<Kansenrapport | null>("kansen.json", null);
