@@ -92,12 +92,11 @@ Vanaf nu krijgt elke blog een kop met afbeelding, inhoudsopgave, actieblok, tip 
 Voor winkels en bedrijven met een vestiging. Vraagt een DataForSEO-account **met tegoed** (zie stap 0): een nieuw account heeft een klein proeftegoed, daarna waardeer je op via Billing (minimaal $50). Je kunt je bedrijfsprofiel ook al toevoegen in de startwizard (stap Lokaal).
 1. Ga naar **Lokaal → Profielen**. Typ de naam en plaats van je bedrijf, zoals je het in Google Maps zou zoeken, en klik op **Zoek in Google**.
 2. Kies het juiste profiel. Vul je **vestigingspagina** in (de pagina op je site met adres en openingstijden) en 2 à 3 **zoekwoorden** zonder plaatsnaam, bijvoorbeeld "bakker, banketbakker". Herhaal dit voor elke vestiging.
-3. Ga naar **Lokaal → Analyse** en klik op **Analyseer bedrijfsprofielen**. Dit duurt 2 tot 4 minuten en kost ongeveer $0,03 per vestiging.
-4. Open een vestiging: bovenaan staan de **5 grootste kansen**. Daaronder de checklist, je positie in Maps vanaf vier punten rond de winkel, de concurrenten boven je en je reviews.
-5. Klik op **Los alles op**. Per vestiging staat alles klaar: een nieuwe beschrijving, extra categorieën, de link naar je eigen pagina (met meetcode), antwoorden op open reviews en Google-berichten voor de komende weken. Bij elk punt staat waar je het in je profiel aanpast.
-   - Log in op Google met het account dat beheerder is van je profiel, klik op **Open profiel**, kopieer de tekst, plak hem en vink **Gedaan** aan.
-   - Automatisch doorvoeren kan niet: daarvoor is een eigen Google Cloud-project met goedgekeurde Business Profile API nodig. Je voert het dus zelf door.
-6. Doe de analyse eens per maand opnieuw en kijk of je score en positie stijgen.
+3. Ga naar **Lokaal → Analyse** en klik op **Eerste meting**. Dit duurt 2 tot 4 minuten en kost ongeveer $0,03 per vestiging.
+4. Per vestiging zie je de score, **waar de kans ligt** en **wat er moet gebeuren** (maximaal vijf punten, de grootste winst bovenaan).
+5. Log in op Google met het account dat beheerder is van je profiel, klik op **Open profiel**, kopieer de tekst, plak hem en klik op **Gedaan**. Automatisch doorvoeren kan niet: daarvoor is een eigen Google Cloud-project met goedgekeurde Business Profile API nodig.
+6. Plaats elke week één Google-bericht per vestiging: de studio zet er een klaar onder "Plaats deze week een Google-bericht". Kopieer, plaats en klik op **Geplaatst**.
+7. Meet eens per maand opnieuw en kijk of je score en positie stijgen.
 
 ## 7. Problemen oplossen
 | Melding | Oplossing |

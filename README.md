@@ -7,7 +7,7 @@
 - **Blogs schrijven** — Claude schrijft complete SEO-blogs in jouw schrijfstijl, met interne links en veelgestelde vragen; OpenAI maakt de afbeelding.
 - **Kwaliteitscheck** — titel, meta, zoekwoord, lengte, links, afbeelding en een vrij adres worden gecontroleerd voordat je publiceert.
 - **Publiceren en inplannen** — naar **WordPress**, **Shopify** of een **eigen koppeling**. Of kopiëren en plakken naar elk ander platform.
-- **Lokaal** — analyseert je Google Bedrijfsprofielen (per vestiging): positie in Google Maps rond de winkel, concurrenten, reviews, check tegen je site, een score met de grootste kansen en kant-en-klare teksten (beschrijving, berichten, antwoorden op reviews). Met **Los alles op** staat per profiel alles klaar om zelf door te voeren (kopiëren, plakken, afvinken). Vraagt DataForSEO met tegoed. Automatisch aanpassen van je profiel kan alleen met een eigen Google Cloud-koppeling (Business Profile API); die zit niet in de studio.
+- **Lokaal** — meet je Google Bedrijfsprofielen (per vestiging): positie in Google Maps rond de winkel, concurrenten, reviews en een check tegen je site. Per vestiging één overzicht: waar de kans ligt en wat er moet gebeuren, met de tekst om te kopiëren en een Google-bericht per week. Vraagt DataForSEO met tegoed. Automatisch aanpassen van je profiel kan alleen met een eigen Google Cloud-koppeling (Business Profile API); die zit niet in de studio.
 - **R7N Blog-plugin** (WordPress) — nette, vaste opmaak met inhoudsopgave, actieblokken, tips en uitklapbare vragen.
 
 ## Starten

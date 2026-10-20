@@ -1,12 +1,13 @@
-import { lokaalAnalyse, instellingen, profielen } from "@/lib/opslag";
+import { suggesties } from "@/lib/lokaal-oplossen";
+import { lokaalAnalyse, instellingen, profielen, suggestieStand } from "@/lib/opslag";
 import { dfsSaldo, heeftDfs } from "@/lib/zoekwoorden";
 import Link from "next/link";
 import { DataForSeoUitleg } from "@/components/Uitleg";
-import { LokaalView } from "./LokaalView";
+import { SimpelView } from "./SimpelView";
 
 export default async function Lokaal() {
   const i = await instellingen();
-  const [lijst, analyse] = await Promise.all([profielen(), lokaalAnalyse()]);
+  const [lijst, analyse, stand] = await Promise.all([profielen(), lokaalAnalyse(), suggestieStand()]);
   let dfs = { werkt: false, melding: "niet gekoppeld (Instellingen)" };
   if (heeftDfs(i.dfs)) {
     const saldo = await dfsSaldo(i.dfs).catch(() => undefined);
@@ -25,7 +26,7 @@ export default async function Lokaal() {
           <DataForSeoUitleg />
         </div>
       )}
-      <LokaalView begin={analyse} aantalProfielen={lijst.length} dfs={dfs} ai={!!i.ai.sleutel} fout={null} />
+      <SimpelView analyse={analyse} suggesties={analyse ? suggesties(analyse, lijst) : []} stand={stand} aantalProfielen={lijst.length} dfs={dfs} ai={!!i.ai.sleutel} />
     </>
   );
 }
