@@ -3,7 +3,7 @@ import { lokaalAnalyse, instellingen, profielen, suggestieStand } from "@/lib/op
 import { dfsSaldo, heeftDfs } from "@/lib/zoekwoorden";
 import Link from "next/link";
 import { DataForSeoUitleg } from "@/components/Uitleg";
-import { SimpelView } from "./SimpelView";
+import { KansenView } from "./KansenView";
 
 export default async function Lokaal() {
   const i = await instellingen();
@@ -26,7 +26,7 @@ export default async function Lokaal() {
           <DataForSeoUitleg />
         </div>
       )}
-      <SimpelView analyse={analyse} suggesties={analyse ? suggesties(analyse, lijst) : []} stand={stand} aantalProfielen={lijst.length} dfs={dfs} ai={!!i.ai.sleutel} />
+      <KansenView analyse={analyse} suggesties={analyse ? suggesties(analyse, lijst) : []} stand={stand} aantalProfielen={lijst.length} dfs={dfs} ai={!!i.ai.sleutel} />
     </>
   );
 }

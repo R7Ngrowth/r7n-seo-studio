@@ -93,10 +93,11 @@ Voor winkels en bedrijven met een vestiging. Vraagt een DataForSEO-account **met
 1. Ga naar **Lokaal → Profielen**. Typ de naam en plaats van je bedrijf, zoals je het in Google Maps zou zoeken, en klik op **Zoek in Google**.
 2. Kies het juiste profiel. Vul je **vestigingspagina** in (de pagina op je site met adres en openingstijden) en 2 à 3 **zoekwoorden** zonder plaatsnaam, bijvoorbeeld "bakker, banketbakker". Herhaal dit voor elke vestiging.
 3. Ga naar **Lokaal → Analyse** en klik op **Eerste meting**. Dit duurt 2 tot 4 minuten en kost ongeveer $0,03 per vestiging.
-4. Per vestiging zie je de score, **waar de kans ligt** en **wat er moet gebeuren** (maximaal vijf punten, de grootste winst bovenaan).
-5. Log in op Google met het account dat beheerder is van je profiel, klik op **Open profiel**, kopieer de tekst, plak hem en klik op **Gedaan**. Automatisch doorvoeren kan niet: daarvoor is een eigen Google Cloud-project met goedgekeurde Business Profile API nodig.
-6. Plaats elke week één Google-bericht per vestiging: de studio zet er een klaar onder "Plaats deze week een Google-bericht". Kopieer, plaats en klik op **Geplaatst**.
-7. Meet eens per maand opnieuw en kijk of je score en positie stijgen.
+4. Bovenaan zie je per vestiging de score, sterren, reviews, foto's en de gemiddelde positie in Google Maps. Klik op een vestiging om naar de kaart te springen.
+5. Per vestiging staat onder **Kansen en wat je doet** een genummerde lijst, de grootste winst bovenaan. Bij elke kans: waarom hij telt, de stappen (waar je klikt in je profiel) en, waar het kan, de tekst om te plakken met een knop **Kopieer**. Log in op Google met het account dat beheerder is van je profiel, voer de stappen uit en klik op **Gedaan**. Automatisch doorvoeren kan niet: daarvoor is een eigen Google Cloud-project met goedgekeurde Business Profile API nodig.
+6. Onder **Meer kansen** staat wat opviel in de vergelijking met de concurrenten en wat Claude in je profiel en reviews zag. Daaronder de checklist, je positie in Google Maps vanaf vier kanten en de concurrenten die boven je staan.
+7. Plaats elke week één Google-bericht per vestiging: de studio zet er een klaar onder **Google-bericht**. Kopieer, plaats het via je profiel (Update toevoegen) en klik op **Geplaatst**.
+8. Meet eens per maand opnieuw en kijk of je score en positie stijgen.
 
 ## 7. Problemen oplossen
 | Melding | Oplossing |
