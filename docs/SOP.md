@@ -2,7 +2,7 @@
 
 **Doel:** binnen een uur je eigen SEO-studio draaien en je eerste blog op je website hebben.
 **Voor wie:** ondernemers en marketeers met een eigen website (WordPress, Shopify of een ander platform).
-**Versie:** 1.0 · R7N Growth
+**Versie:** 1.1 · R7N Growth
 
 ---
 
@@ -51,10 +51,20 @@
 > Fout "inlog niet herkend"? Je hebt waarschijnlijk de naam van het wachtwoord ingevuld in plaats van je gebruikersnaam.
 
 ### Shopify
-1. Shopify-beheer → **Instellingen → Apps → Apps ontwikkelen** → app maken (*R7N SEO Studio*).
-2. **Configuratie → Admin API**: zet `read_content` en `write_content` aan → opslaan → **Installeren**.
-3. Kopieer het **Admin API access token** (`shpat_…`).
-4. Vul in de studio je `…myshopify.com`-adres en het token in → **Test verbinding**.
+Sinds 1 januari 2026 geeft Shopify geen vaste sleutel (`shpat_…`) meer via *Apps ontwikkelen*. Je maakt de app nu in het **Dev Dashboard** en krijgt een **Klant-ID** en een **Klantgeheim**. De studio haalt daarmee zelf elke dag een nieuwe sleutel op.
+
+**Wie kan dit?** De winkeleigenaar, of een personeelsaccount van de winkel met het recht *App-ontwikkeling*. Een samenwerkingsaccount (bijv. van een bureau) kan het niet: Shopify weigert dan de koppeling (`shop_not_permitted`). Doe je het voor een klant? Laat de klant je dan als personeel toevoegen, of laat de klant deze stappen zelf doen.
+
+1. Shopify-beheer → **Instellingen → Apps → Apps ontwikkelen** → klik door naar het **Dev Dashboard** (of ga naar `dev.shopify.com/dashboard` met hetzelfde account).
+2. **Create app → Start from Dev Dashboard** → naam *R7N SEO Studio* → **Create**.
+3. **Versions**: laat **App URL** op de standaard staan (níet het adres van de studio). Kies bij **Scopes** `read_content` en `write_content` → **Release**.
+4. **Install app** (kaart *Installs*) → kies je winkel → **Install**. Kom je daarna op een Shopify-pagina uit, dan is dat goed.
+5. Open **Settings** van de app en kopieer de **Client ID** en het **Client secret** (`shpss_…`).
+6. Vul in de studio je `…myshopify.com`-adres, de **Klant-ID** en het **Klantgeheim** in → **Test verbinding**.
+
+> Heb je nog een oude app van vóór 2026 met een `shpat_`-sleutel? Die kun je in de studio nog invullen onder *Heb je nog een oude vaste sleutel?*.
+>
+> Foutmeldingen: *"Shopify kent deze Klant-ID niet"* = Client ID verkeerd gekopieerd. *"De app is nog niet geïnstalleerd"* = stap 4 overgeslagen. *"Niet toegestaan… andere organisatie"* = gemaakt met een samenwerkingsaccount, zie hierboven.
 
 ### Ander platform
 - **Kopiëren en plakken** (werkt altijd): je kopieert straks per blog de tekst of HTML en de afbeelding naar je eigen platform.

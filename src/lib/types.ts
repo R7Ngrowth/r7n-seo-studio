@@ -19,7 +19,9 @@ export interface Koppeling {
   wpGebruiker?: string;
   wpWachtwoord?: string; // Application Password
   shopWinkel?: string; // winkel.myshopify.com
-  shopToken?: string; // Admin API access token
+  shopClientId?: string; // Client ID van de app in het Shopify Dev Dashboard
+  shopClientSecret?: string; // Client secret (begint met shpss_)
+  shopToken?: string; // oude vaste sleutel (shpat_), alleen voor apps van vóór 2026
   shopBlogId?: string;
   // Ander platform: eigen koppeling (API) of zelf kopiëren en plakken
   andersManier?: "api" | "handmatig";

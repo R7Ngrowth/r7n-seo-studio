@@ -124,21 +124,39 @@ export function CmsUitleg({ cms }: { cms: Cms }) {
   if (cms === "shopify")
     return (
       <Blok titel="Hoe koppel ik Shopify? (stap voor stap)">
+        <p>
+          Sinds 2026 maak je de koppeling in het <strong>Shopify Dev Dashboard</strong>. Je krijgt daar een <strong>Klant-ID</strong> en een{" "}
+          <strong>Klantgeheim</strong>. De studio haalt daarmee zelf elke dag een nieuwe sleutel op; jij hoeft niets te vernieuwen.
+        </p>
+        <p className="text-xs">
+          <strong>Wie kan dit?</strong> De winkeleigenaar, of een personeelsaccount van de winkel met het recht <em>App-ontwikkeling</em>. Een
+          samenwerkingsaccount (bijv. van een bureau) kan het niet: Shopify weigert dan de koppeling.
+        </p>
         <ol className="list-decimal space-y-1.5 pl-4">
           <li>
-            Shopify-beheer → <strong>Settings → Apps and sales channels → Develop apps → Create an app</strong> (naam: <em>R7N SEO Studio</em>).
+            Shopify-beheer → <strong>Instellingen → Apps → Apps ontwikkelen</strong> en klik door naar het <strong>Dev Dashboard</strong> (of ga naar{" "}
+            <code className="mono">dev.shopify.com/dashboard</code> met hetzelfde account).
           </li>
           <li>
-            <strong>Configuration → Admin API integration → Configure</strong>: vink <code className="mono">write_content</code> en <code className="mono">read_content</code> aan, Save.
+            <strong>Create app → Start from Dev Dashboard</strong>, naam <em>R7N SEO Studio</em> → <strong>Create</strong>.
           </li>
           <li>
-            <strong>API credentials → Install app</strong> en kopieer het <strong>Admin API access token</strong> (<code className="mono">shpat_…</code>).
+            Bij <strong>Versions</strong>: laat <strong>App URL</strong> op de standaard staan (niet het adres van de studio). Kies bij <strong>Scopes</strong>{" "}
+            <code className="mono">read_content</code> en <code className="mono">write_content</code> → <strong>Release</strong>.
           </li>
           <li>
-            Vul hierboven het winkeldomein (<code className="mono">winkel.myshopify.com</code>) en het token in.
+            Klik <strong>Install app</strong> (kaart <em>Installs</em>), kies je winkel → <strong>Install</strong>. Kom je daarna op een Shopify-pagina uit,
+            dan is dat goed; die tab mag dicht.
+          </li>
+          <li>
+            Open <strong>Settings</strong> van de app en kopieer de <strong>Client ID</strong> en het <strong>Client secret</strong> (
+            <code className="mono">shpss_…</code>).
+          </li>
+          <li>
+            Vul hierboven het winkeladres (<code className="mono">winkel.myshopify.com</code>), de Klant-ID en het Klantgeheim in → <strong>Test verbinding</strong>.
           </li>
         </ol>
-        <p className="text-xs">Er moet al een blog bestaan (Online Store → Blog posts). Blog-ID leeg = eerste blog.</p>
+        <p className="text-xs">Er moet al een blog bestaan (Online Store → Blogberichten). Blog leeg = je eerste blog.</p>
       </Blok>
     );
   if (cms === "anders")

@@ -23,7 +23,7 @@
 | | Waarvoor | Kosten |
 |---|---|---|
 | **OpenRouter-sleutel** (verplicht) | Claude schrijft, OpenAI maakt beelden | Per gebruik, ±$0,10–0,40 per blog |
-| **Toegang tot je website** | WordPress (Application Password), Shopify (Admin API-token) of eigen koppeling | — |
+| **Toegang tot je website** | WordPress (Application Password), Shopify (Klant-ID + Klantgeheim uit het Dev Dashboard) of eigen koppeling | — |
 | **DataForSEO** (optioneel, aangeraden) | Echte zoekvolumes en moeilijkheid | Eerste storting $50, ±$0,10–0,20 per analyse |
 
 Volledige stap-voor-stap uitleg: **[docs/SOP.md](docs/SOP.md)** en in de app onder **Hoe werkt het**.

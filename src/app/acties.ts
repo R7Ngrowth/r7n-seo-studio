@@ -99,6 +99,7 @@ export async function bewaarAlles(w: Partial<Instellingen> & { nieuweSleutel?: s
         ...nu.koppeling,
         ...rest.koppeling,
         wpWachtwoord: rest.koppeling?.wpWachtwoord?.trim() || nu.koppeling.wpWachtwoord,
+        shopClientSecret: rest.koppeling?.shopClientSecret?.trim() || nu.koppeling.shopClientSecret,
         shopToken: rest.koppeling?.shopToken?.trim() || nu.koppeling.shopToken,
         apiSleutel: rest.koppeling?.apiSleutel?.trim() || nu.koppeling.apiSleutel,
       },

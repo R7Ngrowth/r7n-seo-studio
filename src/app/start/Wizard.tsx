@@ -222,7 +222,7 @@ export function Wizard({ begin }: { begin: { website: string; sleutelAanwezig: b
             {(
               [
                 ["wordpress", "WordPress", "Application Password"],
-                ["shopify", "Shopify", "Admin API-token"],
+                ["shopify", "Shopify", "Klant-ID + Klantgeheim"],
                 ["anders", "Ander platform", "Eigen koppeling of plakken"],
                 ["geen", "Later", "Eerst alleen schrijven"],
               ] as const
@@ -273,12 +273,23 @@ export function Wizard({ begin }: { begin: { website: string; sleutelAanwezig: b
                 <Veld label="Winkeladres" noot="Eindigt op .myshopify.com (Instellingen → Domeinen).">
                   <input value={k.shopWinkel ?? ""} onChange={(e) => zetK("shopWinkel", e.target.value)} placeholder="jouwwinkel.myshopify.com" className="veld" />
                 </Veld>
-                <Veld label="Admin API access token">
-                  <input value={k.shopToken ?? ""} onChange={(e) => zetK("shopToken", e.target.value)} type="password" autoComplete="off" placeholder="shpat_…" className="veld mono !text-xs" />
-                </Veld>
-                <Veld label="Blog (optioneel)" noot="Leeg = je eerste blog. Anders het ID of de naam in de adresbalk (bijv. nieuws)." breed>
+                <Veld label="Blog (optioneel)" noot="Leeg = je eerste blog. Anders de naam in de adresbalk (bijv. nieuws).">
                   <input value={k.shopBlogId ?? ""} onChange={(e) => zetK("shopBlogId", e.target.value)} className="veld" />
                 </Veld>
+                <Veld label="Klant-ID (Client ID)" noot="Dev Dashboard → je app → Settings.">
+                  <input value={k.shopClientId ?? ""} onChange={(e) => zetK("shopClientId", e.target.value)} autoComplete="off" placeholder="32 tekens" className="veld mono !text-xs" />
+                </Veld>
+                <Veld label="Klantgeheim (Client secret)" noot="Begint met shpss_. De studio haalt hiermee zelf elke dag een nieuwe sleutel op.">
+                  <input value={k.shopClientSecret ?? ""} onChange={(e) => zetK("shopClientSecret", e.target.value)} type="password" autoComplete="off" placeholder="shpss_…" className="veld mono !text-xs" />
+                </Veld>
+                <details className="sm:col-span-2 text-xs text-muted">
+                  <summary className="cursor-pointer">Heb je nog een oude vaste sleutel (shpat_, van vóór 2026)?</summary>
+                  <div className="mt-3">
+                    <Veld label="Oude sleutel (Admin API access token)" noot="Alleen als je geen Klant-ID en Klantgeheim hebt. Die gaan altijd voor.">
+                      <input value={k.shopToken ?? ""} onChange={(e) => zetK("shopToken", e.target.value)} type="password" autoComplete="off" placeholder="shpat_…" className="veld mono !text-xs" />
+                    </Veld>
+                  </div>
+                </details>
               </div>
               <CmsUitleg cms="shopify" />
               <button type="button" onClick={doeTest} disabled={bezig !== null} className="btn mt-4">

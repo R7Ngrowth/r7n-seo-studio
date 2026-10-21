@@ -8,7 +8,7 @@ import { CTA_SOORTEN, MODELLEN, type AiInstellingen, type CtaSoort, type DataFor
 import { bewaarAlles, testDfs, testOpgeslagen } from "../acties";
 
 type Begin = { profiel: Profiel; ai: AiInstellingen; dfs: DataForSeo; koppeling: Koppeling; opmaak: Opmaak };
-type Heeft = { ai: boolean; dfs: boolean; wp: boolean; shop: boolean; api: boolean };
+type Heeft = { ai: boolean; dfs: boolean; wp: boolean; shop: boolean; shopOud: boolean; api: boolean };
 const opgeslagen = (ja: boolean, anders = "") => (ja ? "•••• opgeslagen — leeg laten = zo houden" : anders);
 
 export function Formulier({ begin, heeft }: { begin: Begin; heeft: Heeft }) {
@@ -158,12 +158,24 @@ export function Formulier({ begin, heeft }: { begin: Begin; heeft: Heeft }) {
             <Veld label="Winkeladres (.myshopify.com)">
               <input value={k.shopWinkel ?? ""} onChange={(e) => zetK("shopWinkel", e.target.value)} className="veld" />
             </Veld>
-            <Veld label="Admin API access token">
-              <input value={k.shopToken ?? ""} onChange={(e) => zetK("shopToken", e.target.value)} type="password" autoComplete="off" placeholder={opgeslagen(heeft.shop, "shpat_…")} className="veld mono !text-xs" />
-            </Veld>
-            <Veld label="Blog (optioneel)" breed>
+            <Veld label="Blog (optioneel)">
               <input value={k.shopBlogId ?? ""} onChange={(e) => zetK("shopBlogId", e.target.value)} placeholder="Leeg = eerste blog" className="veld" />
             </Veld>
+            <Veld label="Klant-ID (Client ID)">
+              <input value={k.shopClientId ?? ""} onChange={(e) => zetK("shopClientId", e.target.value)} autoComplete="off" placeholder="32 tekens uit het Dev Dashboard" className="veld mono !text-xs" />
+            </Veld>
+            <Veld label="Klantgeheim (Client secret)">
+              <input value={k.shopClientSecret ?? ""} onChange={(e) => zetK("shopClientSecret", e.target.value)} type="password" autoComplete="off" placeholder={opgeslagen(heeft.shop, "shpss_…")} className="veld mono !text-xs" />
+            </Veld>
+            <details className="sm:col-span-2 text-xs text-muted">
+              <summary className="cursor-pointer">Heb je nog een oude vaste sleutel (shpat_, van vóór 2026)?</summary>
+              <div className="mt-3">
+                <Veld label="Oude sleutel (Admin API access token)">
+                  <input value={k.shopToken ?? ""} onChange={(e) => zetK("shopToken", e.target.value)} type="password" autoComplete="off" placeholder={opgeslagen(heeft.shopOud, "shpat_…")} className="veld mono !text-xs" />
+                </Veld>
+                <p className="mt-1.5">Alleen nodig als je geen Klant-ID en Klantgeheim invult. Die gaan altijd voor.</p>
+              </div>
+            </details>
           </div>
         )}
         {k.cms === "anders" && (

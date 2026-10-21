@@ -9,10 +9,10 @@ export default async function Instellingen() {
     profiel: i.profiel,
     ai: { ...i.ai, sleutel: "" },
     dfs: { login: i.dfs.login, wachtwoord: "" },
-    koppeling: { ...i.koppeling, wpWachtwoord: "", shopToken: "", apiSleutel: "" },
+    koppeling: { ...i.koppeling, wpWachtwoord: "", shopClientSecret: "", shopToken: "", apiSleutel: "" },
     opmaak: i.opmaak,
   };
-  const heeft = { ai: !!i.ai.sleutel, dfs: !!i.dfs.wachtwoord, wp: !!i.koppeling.wpWachtwoord, shop: !!i.koppeling.shopToken, api: !!i.koppeling.apiSleutel };
+  const heeft = { ai: !!i.ai.sleutel, dfs: !!i.dfs.wachtwoord, wp: !!i.koppeling.wpWachtwoord, shop: !!i.koppeling.shopClientSecret, shopOud: !!i.koppeling.shopToken, api: !!i.koppeling.apiSleutel };
   return (
     <>
       <Hero nummer="VIII" label="Instellingen" title="Instellingen" lines={["Alles staat op deze computer, in de map data/. Sleutels en wachtwoorden worden nooit gedeeld."]} />
