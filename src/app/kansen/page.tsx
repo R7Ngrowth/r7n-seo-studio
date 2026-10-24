@@ -9,7 +9,7 @@ export default async function Kansen() {
   return (
     <>
       <Hero nummer="II" label="Kansen" title="Kansen" lines={["Waar zoeken je klanten op, en wat mist er nog op je site?"]} />
-      <KansenBord begin={await kansenrapport()} metCijfers={heeftDfs(i.dfs)} />
+      <KansenBord begin={await kansenrapport()} metCijfers={heeftDfs(i.dfs)} aanbod={i.profiel.aanbod ?? ""} />
     </>
   );
 }

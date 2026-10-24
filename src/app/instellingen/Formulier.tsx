@@ -66,6 +66,10 @@ export function Formulier({ begin, heeft }: { begin: Begin; heeft: Heeft }) {
           <Veld label="Taal">
             <input value={p.taal} onChange={(e) => zetP("taal", e.target.value)} className="veld" />
           </Veld>
+          <Veld label="Wat je verkoopt of doet" breed>
+            <textarea value={p.aanbod ?? ""} onChange={(e) => zetP("aanbod", e.target.value)} rows={2} placeholder="bakfiets, e-bike, fatbike, kinderfiets, werkplaats" className="veld" />
+            <span className="mt-1 block text-[11px] text-muted">Productgroepen en diensten, met komma. Kansen onderzoekt elke groep apart; zet er ook bij wat (nog) niet op je site staat.</span>
+          </Veld>
           <Veld label="Schrijfstijl" breed>
             <textarea value={p.toon} onChange={(e) => zetP("toon", e.target.value)} rows={6} className="veld" />
           </Veld>

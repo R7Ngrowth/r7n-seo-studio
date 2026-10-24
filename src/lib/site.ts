@@ -12,8 +12,9 @@ export interface Pagina {
   tekst: string;
 }
 
+// Schoon adres: zonder volgparameters (?gclid=…) en zonder # of slash aan het eind.
 export function normaal(url: string): string {
-  const u = url.trim().replace(/\/+$/, "");
+  const u = url.trim().replace(/[?#].*$/, "").replace(/\/+$/, "");
   return /^https?:\/\//i.test(u) ? u : `https://${u}`;
 }
 
@@ -62,6 +63,55 @@ export function inhoudVan(html: string): { titel: string; beschrijving: string; 
   return { titel, beschrijving, koppen: [...new Set(koppen)].slice(0, 20), tekst: [...new Set(delen)].join("\n").trim() };
 }
 
+// De menu-items van een pagina: de namen van de productgroepen en diensten zoals de site ze zelf noemt.
+// Eerst uit <nav>/<header>; staat daar niets bruikbaars, dan alle korte interne linkteksten.
+export function menuVan(html: string, basis: string): string[] {
+  const host = (() => {
+    try {
+      return new URL(normaal(basis)).hostname.replace(/^www\./, "");
+    } catch {
+      return "";
+    }
+  })();
+  const uit = (deel: string) => {
+    const namen: string[] = [];
+    for (const m of deel.matchAll(/<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi)) {
+      const href = m[1];
+      if (/^(mailto:|tel:|javascript:|#)/i.test(href)) continue;
+      if (/^https?:\/\//i.test(href) && host && !href.replace(/^https?:\/\/(www\.)?/i, "").startsWith(host)) continue;
+      const t = schoon(m[2]);
+      if (t.length < 3 || t.length > 40 || /\d{2,}/.test(t)) continue;
+      namen.push(t);
+    }
+    return [...new Set(namen)];
+  };
+  const navs = [...html.matchAll(/<(nav|header)\b[\s\S]*?<\/\1>/gi)].map((m) => m[0]).join("\n");
+  const uitNav = uit(navs);
+  return (uitNav.length >= 4 ? uitNav : uit(html)).slice(0, 80);
+}
+
+// De secties van de site uit de sitemap: per eerste padsegment de onderliggende pagina's ("fietstype" → stadsfiets, bakfiets, …).
+// Zo ziet de analyse ook productgroepen die niet in het menu staan.
+export function sectiesVan(urls: string[]): { sectie: string; items: string[] }[] {
+  const per = new Map<string, Set<string>>();
+  for (const u of urls) {
+    let delen: string[];
+    try {
+      delen = new URL(u).pathname.split("/").filter(Boolean).map((d) => decodeURIComponent(d).replace(/[-_]+/g, " ").trim());
+    } catch {
+      continue;
+    }
+    if (delen.length !== 2) continue;
+    if (!per.has(delen[0])) per.set(delen[0], new Set());
+    per.get(delen[0])!.add(delen[1]);
+  }
+  return [...per]
+    .filter(([, items]) => items.size >= 2 && items.size <= 60)
+    .map(([sectie, items]) => ({ sectie, items: [...items].slice(0, 40) }))
+    .sort((a, b) => b.items.length - a.items.length)
+    .slice(0, 12);
+}
+
 export function herkenCms(html: string, kop?: Headers): Cms {
   const h = html.toLowerCase();
   if (h.includes("cdn.shopify.com") || h.includes("shopify.theme") || kop?.get("x-shopid")) return "shopify";
@@ -106,23 +156,25 @@ const diepte = (u: string) => {
 const OVERSLAAN = /\/(wp-content|wp-json|tag|category|categorie|author|feed|cart|checkout|winkelwagen|account|login|privacy|cookie|voorwaarden|algemene-voorwaarden)\b|\?|\.(jpg|png|webp|pdf|xml)$/i;
 
 // Leest de belangrijkste pagina's: de homepage en de minst diepe pagina's uit de sitemap.
-export async function leesSite(basis: string, max = 20): Promise<{ paginas: Pagina[]; alleUrls: string[] }> {
+export async function leesSite(basis: string, max = 20): Promise<{ paginas: Pagina[]; alleUrls: string[]; menu: string[] }> {
   const b = normaal(basis);
   const alleUrls = (await sitemap(b)).filter((u) => !OVERSLAAN.test(u));
   const keuze = [b, ...alleUrls.filter((u) => u !== b).sort((x, y) => diepte(x) - diepte(y))].slice(0, max);
   const paginas: Pagina[] = [];
+  let menu: string[] = [];
   for (let i = 0; i < keuze.length; i += 5) {
     const ronde = await Promise.all(
       keuze.slice(i, i + 5).map(async (url): Promise<Pagina | null> => {
         const r = await haal(url);
         if (!r) return null;
+        if (url === b) menu = menuVan(r.html, b);
         const inh = inhoudVan(r.html);
         return { url, ...inh, woorden: inh.tekst.split(/\s+/).filter(Boolean).length };
       })
     );
     paginas.push(...ronde.filter((p): p is Pagina => !!p));
   }
-  return { paginas, alleUrls };
+  return { paginas, alleUrls, menu };
 }
 
 // Leesbare titel uit een adres, voor pagina's die we niet ophalen.

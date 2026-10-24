@@ -82,7 +82,7 @@ Vanaf nu krijgt elke blog een kop met afbeelding, inhoudsopgave, actieblok, tip 
 ---
 
 ## 5. Je eerste blog (15 minuten)
-1. **Kansen → Start de analyse** (2 à 3 minuten).
+1. **Kansen → Start de analyse** (2 à 3 minuten). De studio herkent je productgroepen en diensten uit je menu en categoriepagina's en onderzoekt ze elk apart. Onder de analyse zie je per groep hoeveel zoekwoorden en kansen er gevonden zijn. Mis je iets wat je verkoopt (bijvoorbeeld fatbikes, omdat het nog niet op je site staat)? Zet het bij **Wat je verkoopt of doet** en klik **Analyseer opnieuw**.
 2. Kies een kans met een hoge score en het label *nog niet op je site*. Open hem en lees de brief.
 3. Klik **Schrijf deze blog** (2 à 3 minuten).
 4. Lees de blog in het **Voorbeeld**. Pas aan via **Bewerken** waar nodig.
@@ -105,7 +105,7 @@ Voor winkels en bedrijven met een vestiging. Vraagt een DataForSEO-account **met
 3. Ga naar **Lokaal → Analyse** en klik op **Eerste meting**. Dit duurt 2 tot 4 minuten en kost ongeveer $0,03 per vestiging.
 4. Bovenaan zie je per vestiging de score, sterren, reviews, foto's en de gemiddelde positie in Google Maps. Klik op een vestiging om naar de kaart te springen.
 5. Per vestiging staat onder **Kansen en wat je doet** een genummerde lijst, de grootste winst bovenaan. Bij elke kans: waarom hij telt, de stappen (waar je klikt in je profiel) en, waar het kan, de tekst om te plakken met een knop **Kopieer**. Log in op Google met het account dat beheerder is van je profiel, voer de stappen uit en klik op **Gedaan**. Automatisch doorvoeren kan niet: daarvoor is een eigen Google Cloud-project met goedgekeurde Business Profile API nodig.
-6. Onder **Meer kansen** staat wat opviel in de vergelijking met de concurrenten en wat Claude in je profiel en reviews zag. Daaronder de checklist, je positie in Google Maps vanaf vier kanten en de concurrenten die boven je staan.
+6. Onder **Meer kansen** staat wat opviel in de vergelijking met de concurrenten en wat Claude in je profiel en reviews zag. Daaronder de checklist, je positie in Google Maps vanaf vier kanten en de concurrenten die boven je staan. Alleen bedrijven van jouw soort tellen als concurrent (op Google-categorie, en met een OpenRouter-sleutel beoordeelt Claude het); andere soorten bedrijven die op je zoekwoorden verschijnen staan apart, en hun categorieën neem je niet over.
 7. Plaats elke week één Google-bericht per vestiging: de studio zet er een klaar onder **Google-bericht**. Kopieer, plaats het via je profiel (Update toevoegen) en klik op **Geplaatst**.
 8. Meet eens per maand opnieuw en kijk of je score en positie stijgen.
 

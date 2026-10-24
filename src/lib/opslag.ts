@@ -30,7 +30,7 @@ async function schrijf(bestand: string, data: unknown) {
 export const LEEG: Instellingen = {
   klaar: false,
   dfs: { login: "", wachtwoord: "" },
-  profiel: { website: "", naam: "", onderwerp: "", doelgroep: "", toon: "", taal: "Nederlands", auteur: "", extra: "" },
+  profiel: { website: "", naam: "", onderwerp: "", doelgroep: "", toon: "", taal: "Nederlands", auteur: "", extra: "", aanbod: "" },
   koppeling: { cms: "geen" },
   ai: { sleutel: "", tekstmodel: "anthropic/claude-opus-5.5", beeldmodel: "openai/gpt-5.4-image-2", beeldstijl: "" },
   opmaak: { plugin: false, ctas: ["advies", "afspraak", "contact"] },

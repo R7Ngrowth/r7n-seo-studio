@@ -1,13 +1,13 @@
 "use client";
 
-import { ArrowRight, ChevronDown, ExternalLink, Radar } from "lucide-react";
+import { ArrowRight, ChevronDown, ExternalLink, Package, Radar } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Bezig } from "@/components/Bezig";
 import { Tegel } from "@/components/ui";
 import type { Bedoeling, Gat, Kans, Kansenrapport } from "@/lib/types";
-import { analyseer, schrijfBlog } from "../acties";
+import { analyseer, bewaarAanbod, schrijfBlog } from "../acties";
 
 const GAT: Record<Gat, [string, string]> = {
   nieuw: ["nog niet op je site", "text-accent"],
@@ -29,9 +29,84 @@ function Ring({ waarde }: { waarde: number }) {
   );
 }
 
-export function KansenBord({ begin, metCijfers }: { begin: Kansenrapport | null; metCijfers: boolean }) {
+// Welke productgroepen zijn onderzocht, met hoeveel zoekwoorden en kansen, en het veld om zelf groepen toe te voegen.
+function Aanbod({ r, aanbod, setAanbod, onStart, bezig }: { r: Kansenrapport | null; aanbod: string; setAanbod: (v: string) => void; onStart: () => void; bezig: boolean }) {
+  const [tekst, setTekst] = useState(aanbod);
+  const [stand, setStand] = useState<"idle" | "bezig" | "klaar" | "fout">("idle");
+  const [fout, setFout] = useState<string | null>(null);
+  const anders = tekst.trim() !== aanbod.trim();
+  async function opslaan() {
+    setStand("bezig");
+    setFout(null);
+    const u = await bewaarAanbod(tekst);
+    if (u.ok) {
+      setAanbod(u.data);
+      setTekst(u.data);
+      setStand("klaar");
+    } else {
+      setStand("fout");
+      setFout(u.fout);
+    }
+  }
+  const groepen = r?.groepen ?? [];
+  return (
+    <div className="kaart mt-5 p-4">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="lbl flex items-center gap-1.5 !text-[9.5px]">
+          <Package className="h-3.5 w-3.5" /> Onderzochte productgroepen en diensten
+        </div>
+        {r?.kosten ? <span className="mono text-[11px] text-muted">DataForSEO ${r.kosten.toFixed(2)}</span> : null}
+      </div>
+      {groepen.length > 0 ? (
+        <ul className="mt-3 flex flex-wrap gap-2">
+          {groepen.map((g) => {
+            const weinig = g.zoekwoorden === 0 || (g.volume !== null && g.volume < 50);
+            return (
+              <li
+                key={g.term}
+                title={`${g.zoekwoorden} zoekwoorden gevonden${g.volume !== null ? `, samen ${g.volume.toLocaleString("nl-NL")} zoekopdrachten per maand` : ""}${g.eigen ? " · door jou toegevoegd" : ""}`}
+                className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs ${g.kansen ? "border-line text-text" : "border-dashed border-line text-muted"}`}
+              >
+                <span>{g.naam}</span>
+                <span className="mono text-[10.5px] text-muted">
+                  {g.kansen} {g.kansen === 1 ? "kans" : "kansen"}
+                  {weinig ? " · weinig zoekvraag" : ""}
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+      ) : (
+        <p className="mt-2 text-sm text-muted">Na de analyse zie je hier per productgroep hoeveel zoekwoorden en kansen er gevonden zijn.</p>
+      )}
+      <div className="mt-4 grid gap-2 sm:grid-cols-[1fr_auto]">
+        <label className="block">
+          <span className="text-[12px] text-muted">
+            Ontbreekt er iets wat je verkoopt of doet? Zet het hier (met komma); de volgende analyse onderzoekt elke groep apart, ook als het nog niet op je site staat.
+          </span>
+          <input value={tekst} onChange={(e) => { setTekst(e.target.value); setStand("idle"); }} placeholder="bakfiets, e-bike, fatbike, kinderfiets, werkplaats" className="veld mt-1.5" />
+        </label>
+        <div className="flex items-end gap-2">
+          <button onClick={opslaan} disabled={!anders || stand === "bezig"} className="btn">
+            {stand === "bezig" ? "Opslaan…" : "Bewaar"}
+          </button>
+          {r && (
+            <button onClick={onStart} disabled={anders || bezig} className="btn btn-vol" title={anders ? "Bewaar eerst je aanbod" : "Nieuwe analyse met dit aanbod"}>
+              <Radar className="h-4 w-4" /> Analyseer opnieuw
+            </button>
+          )}
+        </div>
+      </div>
+      {stand === "klaar" && <p className="mt-2 text-xs text-ok">Bewaard. Klik op Analyseer opnieuw om de nieuwe groepen te onderzoeken.</p>}
+      {fout && <p className="mt-2 text-xs text-bad">{fout}</p>}
+    </div>
+  );
+}
+
+export function KansenBord({ begin, metCijfers, aanbod: beginAanbod }: { begin: Kansenrapport | null; metCijfers: boolean; aanbod: string }) {
   const router = useRouter();
   const [r, setR] = useState(begin);
+  const [aanbod, setAanbod] = useState(beginAanbod);
   const [thema, setThema] = useState<string | null>(null);
   const [open, setOpen] = useState<string | null>(null);
   const [bezig, setBezig] = useState<"analyse" | "schrijven" | null>(null);
@@ -63,7 +138,7 @@ export function KansenBord({ begin, metCijfers }: { begin: Kansenrapport | null;
       <Bezig
         titel="Je markt wordt onderzocht"
         seconden={150}
-        stappen={["Je website lezen", "Zoektermen van je klanten bepalen", metCijfers ? "Zoekvolumes ophalen bij DataForSEO" : "Google-suggesties verzamelen", "Thema's en gaten in je site vinden", "Kansen scoren en briefs schrijven"]}
+        stappen={["Je website lezen", "Productgroepen en zoektermen van je klanten bepalen", metCijfers ? "Per productgroep zoekvolumes ophalen bij DataForSEO" : "Google-suggesties verzamelen", "Thema's en gaten in je site vinden", "Kansen scoren en briefs schrijven"]}
       />
     );
   if (bezig === "schrijven")
@@ -99,6 +174,9 @@ export function KansenBord({ begin, metCijfers }: { begin: Kansenrapport | null;
           <button onClick={start} className="btn btn-vol mt-6">
             <Radar className="h-4 w-4" /> Start de analyse
           </button>
+          <div className="mx-auto mt-6 max-w-2xl text-left">
+            <Aanbod r={null} aanbod={aanbod} setAanbod={setAanbod} onStart={start} bezig={!!bezig} />
+          </div>
         </div>
       ) : (
         <>
@@ -115,6 +193,7 @@ export function KansenBord({ begin, metCijfers }: { begin: Kansenrapport | null;
             </button>
           </div>
           {r.melding && <div className="melding melding-geel mt-3 px-4 py-3 text-sm text-warn">{r.melding}</div>}
+          <Aanbod r={r} aanbod={aanbod} setAanbod={setAanbod} onStart={start} bezig={!!bezig} />
 
           <div className="mt-5 grid gap-5 lg:grid-cols-[220px_1fr]">
             <aside className="space-y-1">

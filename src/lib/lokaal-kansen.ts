@@ -164,6 +164,12 @@ export function kansenVoor(
 
   // Meer kansen uit de vergelijking met concurrenten en wat de AI opviel.
   const meer: ExtraKans[] = [];
+  const anderen = p.anderen ?? [];
+  if (anderen.length && !conc.length)
+    meer.push({
+      titel: `Op je zoekwoorden staan vooral andere soorten bedrijven boven je (${anderen.map((x) => `${x.naam}, ${x.categorie.toLowerCase()}`).join("; ")})`,
+      actie: "Dat zijn geen concurrenten; hun categorieën neem je niet over. Controleer bij Profielen of je zoekwoorden kloppen met waarmee klanten jouw zaak zoeken.",
+    });
   const meerFotos = conc.filter((x) => (x.fotos ?? 0) > d.fotos * 2);
   if (meerFotos.length && !kansen.some((k) => k.id === "fotos")) meer.push({ titel: `${meerFotos[0].naam} heeft ${meerFotos[0].fotos} foto's (jij ${d.fotos})`, actie: "Voeg elke maand 3 tot 5 nieuwe echte foto's toe." });
   const beter = conc.filter((x) => (x.sterren ?? 0) > (d.sterren ?? 0) && (x.reviews ?? 0) > d.reviews);

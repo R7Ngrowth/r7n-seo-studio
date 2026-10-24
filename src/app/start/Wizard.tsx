@@ -22,7 +22,7 @@ export function Wizard({ begin }: { begin: { website: string; sleutelAanwezig: b
   const [tekstmodel, setTekstmodel] = useState<string>(MODELLEN.tekst[0].id);
   const [beeldmodel, setBeeldmodel] = useState<string>(MODELLEN.beeld[0].id);
 
-  const [profiel, setProfiel] = useState<Profiel>({ website: "", naam: "", onderwerp: "", doelgroep: "", toon: "", taal: "Nederlands", auteur: "", extra: "" });
+  const [profiel, setProfiel] = useState<Profiel>({ website: "", naam: "", onderwerp: "", doelgroep: "", toon: "", taal: "Nederlands", auteur: "", extra: "", aanbod: "" });
   const zet = (k: keyof Profiel, v: string) => setProfiel((p) => ({ ...p, [k]: v }));
   const [blogs, setBlogs] = useState(0);
   const [paginas, setPaginas] = useState(0);
@@ -194,6 +194,9 @@ export function Wizard({ begin }: { begin: { website: string; sleutelAanwezig: b
             </Veld>
             <Veld label="Taal">
               <input value={profiel.taal} onChange={(e) => zet("taal", e.target.value)} className="veld" />
+            </Veld>
+            <Veld label="Wat je verkoopt of doet" noot="Productgroepen en diensten, met komma. Kansen onderzoekt elke groep apart; zet er ook bij wat (nog) niet op je site staat, bijvoorbeeld fatbikes." breed>
+              <textarea value={profiel.aanbod ?? ""} onChange={(e) => zet("aanbod", e.target.value)} rows={2} placeholder="bakfiets, e-bike, fatbike, kinderfiets, werkplaats" className="veld" />
             </Veld>
             <Veld label="Schrijfstijl (tone of voice)" breed>
               <textarea value={profiel.toon} onChange={(e) => zet("toon", e.target.value)} rows={6} className="veld" />

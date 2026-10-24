@@ -1,7 +1,7 @@
 // Teksten voor een Google Bedrijfsprofiel, geschreven met je eigen OpenRouter-sleutel:
 // een nieuwe beschrijving, Google-berichten, antwoorden op open reviews en wat opvalt.
 import { json } from "./ai";
-import type { ProfielAnalyse, Teksten } from "./lokaal";
+import type { Concurrent, ProfielAnalyse, ProfielData, Teksten } from "./lokaal";
 import type { Instellingen } from "./types";
 
 const toon = (n: number | null | undefined) => (n === null || n === undefined ? "?" : String(n));
@@ -10,6 +10,7 @@ function invoer(i: Instellingen, pa: ProfielAnalyse, plaats: string): string {
   const d = pa.data!;
   const open = pa.reviews.open.map((r, i) => `[${i}] ${r.sterren}★ (${r.datum}): ${r.tekst || "(geen tekst)"}`).join("\n");
   const conc = pa.concurrenten.map((c) => `- ${c.naam}: ${toon(c.sterren)}★, ${toon(c.reviews)} reviews, ${toon(c.fotos)} foto's, categorie ${c.categorie}`).join("\n");
+  const anderen = (pa.anderen ?? []).map((c) => `- ${c.naam} (${c.categorie})`).join("\n");
   const missen = pa.checks.filter((c) => c.ok === false).map((c) => `- ${c.label}: ${c.uitleg}`).join("\n");
   const s = i.profiel;
   return `BEDRIJF: ${s.naam} (${s.website})
@@ -27,8 +28,11 @@ Telefoon: ${d.telefoon}
 WAT ONTBREEKT OF BETER KAN:
 ${missen || "-"}
 
-CONCURRENTEN DIE BOVEN DIT PROFIEL STAAN:
+CONCURRENTEN DIE BOVEN DIT PROFIEL STAAN (zelfde soort bedrijf):
 ${conc || "-"}
+
+ANDERE SOORTEN BEDRIJVEN DIE OP DEZELFDE ZOEKWOORDEN BOVEN DIT PROFIEL STAAN (geen concurrenten; neem hun categorieën of aanbod niet over):
+${anderen || "-"}
 
 ONBEANTWOORDE REVIEWS MET 3 STERREN OF MINDER:
 ${open || "(geen)"}`;
@@ -69,6 +73,40 @@ export async function schrijfTeksten(i: Instellingen, pa: ProfielAnalyse, plaats
       .map((x) => ({ review: pa.reviews.open[x.index].tekst || `${pa.reviews.open[x.index].sterren}★ zonder tekst`, antwoord: x.antwoord.trim() })),
     observaties: (r.observaties ?? []).map((o) => o.trim()).filter(Boolean).slice(0, 4),
   };
+}
+
+// Welke van de bedrijven die boven dit profiel staan zijn echte concurrenten? Een escaperoom is dat niet voor een winkel in
+// escape-spellen voor thuis, ook al verschijnen ze op hetzelfde zoekwoord. Geeft per Google-ID true/false; null als het niet lukt.
+export async function beoordeelConcurrenten(i: Instellingen, d: ProfielData, kandidaten: Concurrent[]): Promise<Map<string, boolean> | null> {
+  if (!i.ai.sleutel || !kandidaten.length) return null;
+  const s = i.profiel;
+  const r = await json<{ concurrenten?: { index: number; concurrent: boolean }[] }>(
+    i.ai.sleutel,
+    i.ai.tekstmodel,
+    [
+      {
+        role: "system",
+        content: `Je beoordeelt voor een bedrijf welke andere bedrijven in Google Maps echte concurrenten zijn.
+Een concurrent is een bedrijf waar dezelfde klant hetzelfde soort product of dienst zou kopen in plaats van bij dit bedrijf. Een bedrijf uit een andere branche dat toevallig op hetzelfde zoekwoord verschijnt is GEEN concurrent (bijvoorbeeld: een escaperoom-locatie is geen concurrent van een winkel die escape-spellen voor thuis verkoopt; een speelgoedwinkel is geen concurrent van een fietsenmaker).
+Antwoord alleen met JSON: {"concurrenten":[{"index":0,"concurrent":true}]} met voor elke kandidaat één regel.`,
+      },
+      {
+        role: "user",
+        content: `BEDRIJF: ${d.naam || s.naam}
+Wat het doet: ${s.onderwerp || "-"}
+Doelgroep: ${s.doelgroep || "-"}
+Google-categorieën: ${[d.categorie, ...d.extra].filter(Boolean).join(", ") || "-"}
+Beschrijving in Google: ${d.beschrijving || "(leeg)"}
+
+KANDIDATEN:
+${kandidaten.map((c, n) => `[${n}] ${c.naam} — categorie: ${c.categorie || "onbekend"}`).join("\n")}`,
+      },
+    ],
+    800
+  );
+  const uit = new Map<string, boolean>();
+  for (const x of r.concurrenten ?? []) if (kandidaten[x.index] && typeof x.concurrent === "boolean") uit.set(kandidaten[x.index].cid, x.concurrent);
+  return uit.size ? uit : null;
 }
 
 // Plaatsnaam uit een Nederlands adres ("Zilverstraat 6, 1811 DH Alkmaar" → "Alkmaar").

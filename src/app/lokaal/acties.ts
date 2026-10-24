@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { analyseerProfielen, gebruikDfs, werkReviewsBij, zoekProfielen, type LokaalAnalyse, type ProfielAnalyse, type Zoekresultaat } from "@/lib/lokaal";
-import { plaatsUit, schrijfTeksten } from "@/lib/lokaal-teksten";
+import { beoordeelConcurrenten, plaatsUit, schrijfTeksten } from "@/lib/lokaal-teksten";
 import { bewaarLokaal, instellingen, log, lokaalAnalyse, profielen, verwijderProfiel, voegProfielToe, wijzigProfiel, zetSuggestie, type SuggestieStand } from "@/lib/opslag";
 import type { Instellingen } from "@/lib/types";
 
@@ -95,7 +95,11 @@ export async function analyseer(): Promise<Uitkomst<LokaalAnalyse>> {
     const lijst = await profielen();
     if (!lijst.length) throw new Error("Voeg eerst een bedrijfsprofiel toe bij Profielen.");
     // Lokaal is er geen tijdslimiet, maar langer dan 3 minuten op reviews wachten heeft geen zin.
-    const a = await analyseerProfielen(lijst, { wachtOpReviewsTot: begin + 180_000 });
+    // Met een OpenRouter-sleutel beoordeelt Claude welke bedrijven boven je echte concurrenten zijn (zelfde branche); anders op categorie.
+    const a = await analyseerProfielen(lijst, {
+      wachtOpReviewsTot: begin + 180_000,
+      oordeel: i.ai.sleutel ? (_p, data, kandidaten) => beoordeelConcurrenten(i, data, kandidaten) : undefined,
+    });
     if (i.ai.sleutel) {
       a.ai = true;
       const fouten = await metTeksten(i, a.profielen);

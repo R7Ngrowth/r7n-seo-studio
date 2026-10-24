@@ -138,7 +138,8 @@ export interface ProfielAnalyse {
   naam: string;
   data: ProfielData | null;
   metingen: Meting[];
-  concurrenten: Concurrent[];
+  concurrenten: Concurrent[]; // zelfde soort bedrijf, staan boven je
+  anderen?: Concurrent[]; // staan ook boven je op je zoekwoorden, maar bieden iets anders (geen concurrent)
   reviews: ReviewStats;
   site: SiteCheck;
   checks: Check[];
@@ -353,8 +354,8 @@ async function raster(lat: number, lng: number, cid: string, zoekwoorden: string
   return { metingen, lijsten };
 }
 
-// De zaken die het vaakst boven ons staan (eigen andere vestigingen tellen niet mee).
-function concurrentenUit(r: RasterUit, cid: string, eigen: Set<string>): Concurrent[] {
+// De zaken die het vaakst boven ons staan (eigen andere vestigingen tellen niet mee). Nog ongefilterd: ook bedrijven uit een andere branche.
+export function kandidatenUit(r: RasterUit, cid: string, eigen: Set<string>, max = 8): Concurrent[] {
   const telling = new Map<string, Concurrent & { som: number; n: number }>();
   for (const l of r.lijsten) {
     const onze = l.items.find((i) => i.cid === cid)?.rank_group ?? 21;
@@ -381,7 +382,33 @@ function concurrentenUit(r: RasterUit, cid: string, eigen: Set<string>): Concurr
   return [...telling.values()]
     .map(({ som, n, ...c }) => ({ ...c, gem_positie: Math.round((som / n) * 10) / 10 }))
     .sort((a, b) => b.boven - a.boven || a.gem_positie - b.gem_positie)
-    .slice(0, 3);
+    .slice(0, max);
+}
+
+// Is dit hetzelfde soort bedrijf? Vergelijkt de Google-categorieën: gelijk, de een bevat de ander ("bakkerij" in "banketbakkerij"),
+// of een gemeenschappelijk begin van minstens 5 letters ("fietsenwinkel" en "fietsenmaker"). Zo wordt een escaperoom geen
+// concurrent van een winkel in escape-spellen voor thuis, alleen omdat hij op hetzelfde zoekwoord verschijnt.
+const woorden = (c: string) => c.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").split(/[^a-z]+/).filter((w) => w.length >= 4);
+export function zelfdeBranche(onze: string[], hun: string): boolean {
+  const h = woorden(hun);
+  if (!h.length) return false;
+  for (const o of onze.flatMap(woorden)) {
+    for (const w of h) {
+      if (o === w) return true;
+      if ((o.length >= 5 && w.includes(o)) || (w.length >= 5 && o.includes(w))) return true;
+      let n = 0;
+      while (n < o.length && n < w.length && o[n] === w[n]) n++;
+      if (n >= 5) return true;
+    }
+  }
+  return false;
+}
+
+// Kandidaten splitsen in echte concurrenten en andere soorten bedrijven. Het oordeel (van de AI) wint als het er is; anders de categorieën.
+export function splitsConcurrenten(kandidaten: Concurrent[], d: ProfielData, oordeel?: Map<string, boolean> | null): { concurrenten: Concurrent[]; anderen: Concurrent[] } {
+  const onze = [d.categorie, ...d.extra].filter(Boolean);
+  const peer = (c: Concurrent) => oordeel?.get(c.cid) ?? (onze.length ? zelfdeBranche(onze, c.categorie) : true);
+  return { concurrenten: kandidaten.filter(peer).slice(0, 3), anderen: kandidaten.filter((c) => !peer(c)).slice(0, 3) };
 }
 
 /* ------------------------------ Reviews ------------------------------ */
@@ -630,9 +657,12 @@ export function controleerKlaar(): void {
   if (!hasDataForSeo()) throw new Error("DataForSEO is niet gekoppeld. Vul je API-login en API-wachtwoord in bij Instellingen.");
 }
 
+// oordeel: optioneel, beslist per kandidaat (cid → true/false) of het een echte concurrent is; de Studio laat dat door Claude doen.
+export type ConcurrentOordeel = (p: Vestiging, data: ProfielData, kandidaten: Concurrent[]) => Promise<Map<string, boolean> | null>;
+
 export async function analyseerProfielen(
   profielen: Vestiging[],
-  opties: { wachtOpReviewsTot: number; log?: (b: string) => void }
+  opties: { wachtOpReviewsTot: number; log?: (b: string) => void; oordeel?: ConcurrentOordeel }
 ): Promise<LokaalAnalyse> {
   controleerKlaar();
   const k = new Kosten();
@@ -649,9 +679,19 @@ export async function analyseerProfielen(
       const lng = p.lng ?? data.lng;
       const r = lat !== null && lng !== null && p.zoekwoorden.length ? await raster(lat, lng, p.cid, p.zoekwoorden, k) : { metingen: [], lijsten: [] };
       const site = await siteCheck(p.pagina_url, data.telefoon, data.uren);
-      return { p, data, r, site, fout: undefined as string | undefined };
+      const kandidaten = kandidatenUit(r, p.cid, eigen);
+      const oordeel = kandidaten.length && opties.oordeel ? await opties.oordeel(p, data, kandidaten).catch(() => null) : null;
+      return { p, data, r, site, ...splitsConcurrenten(kandidaten, data, oordeel), fout: undefined as string | undefined };
     } catch (e) {
-      return { p, data: null, r: { metingen: [], lijsten: [] } as RasterUit, site: { pagina_url: p.pagina_url, gelezen: false, telefoon_klopt: null, uren_site: null, uren_verschil: [] } as SiteCheck, fout: e instanceof Error ? e.message : String(e) };
+      return {
+        p,
+        data: null,
+        r: { metingen: [], lijsten: [] } as RasterUit,
+        site: { pagina_url: p.pagina_url, gelezen: false, telefoon_klopt: null, uren_site: null, uren_verschil: [] } as SiteCheck,
+        concurrenten: [] as Concurrent[],
+        anderen: [] as Concurrent[],
+        fout: e instanceof Error ? e.message : String(e),
+      };
     }
   });
   opties.log?.(`Profielen en Maps-metingen opgehaald (${profielen.length})`);
@@ -674,12 +714,11 @@ export async function analyseerProfielen(
   const categorieen = ruw.map((x) => x.data?.categorie ?? "");
   const profielenUit: ProfielAnalyse[] = ruw.map((x, i) => {
     const rv = reviews.get(x.p.id)!;
-    const concurrenten = concurrentenUit(x.r, x.p.cid, eigen);
     if (!x.data)
-      return { profiel_id: x.p.id, cid: x.p.cid, naam: x.p.naam, data: null, metingen: [], concurrenten: [], reviews: rv, site: x.site, checks: [], score: 0, kansen: [], teksten: null, fout: x.fout };
-    const anderen = categorieen.filter((_, j) => j !== i);
-    const b = beoordeel(x.p, x.data, x.r.metingen, concurrenten, rv, x.site, anderen, profielen.length > 1);
-    return { profiel_id: x.p.id, cid: x.p.cid, naam: x.p.naam, data: x.data, metingen: x.r.metingen, concurrenten, reviews: rv, site: x.site, ...b, teksten: null };
+      return { profiel_id: x.p.id, cid: x.p.cid, naam: x.p.naam, data: null, metingen: [], concurrenten: [], anderen: [], reviews: rv, site: x.site, checks: [], score: 0, kansen: [], teksten: null, fout: x.fout };
+    const catAnderen = categorieen.filter((_, j) => j !== i);
+    const b = beoordeel(x.p, x.data, x.r.metingen, x.concurrenten, rv, x.site, catAnderen, profielen.length > 1);
+    return { profiel_id: x.p.id, cid: x.p.cid, naam: x.p.naam, data: x.data, metingen: x.r.metingen, concurrenten: x.concurrenten, anderen: x.anderen, reviews: rv, site: x.site, ...b, teksten: null };
   });
 
   const wacht = profielenUit.filter((p) => p.reviews.status === "wacht").length;

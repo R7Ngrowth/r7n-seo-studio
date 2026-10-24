@@ -26,6 +26,14 @@ async function doe<T>(fn: () => Promise<T>): Promise<Uitkomst<T>> {
 }
 
 export const analyseer = async (): Promise<Uitkomst<Kansenrapport>> => doe(async () => analyseerKansen(await instellingen()));
+// Aanbod (productgroepen en diensten) bijwerken vanaf de Kansen-pagina; de volgende analyse onderzoekt ze allemaal.
+export const bewaarAanbod = async (aanbod: string): Promise<Uitkomst<string>> =>
+  doe(async () => {
+    const i = await instellingen();
+    const schoon = aanbod.split(/[,\n;]/).map((t) => t.trim()).filter(Boolean).join(", ");
+    await bewaarInstellingen({ profiel: { ...i.profiel, aanbod: schoon } });
+    return schoon;
+  });
 export const schrijfBlog = async (onderwerp: string, kansId?: string): Promise<Uitkomst<string>> =>
   doe(async () => {
     if (!onderwerp.trim()) throw new Error("Vul een onderwerp in.");

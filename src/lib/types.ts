@@ -11,6 +11,7 @@ export interface Profiel {
   taal: string;
   auteur: string;
   extra: string; // vaste wensen: woorden vermijden, merken noemen, …
+  aanbod?: string; // productgroepen en diensten, met komma ("bakfietsen, fatbikes, werkplaats"); vult de analyse van Kansen aan
 }
 
 export interface Koppeling {
@@ -121,6 +122,16 @@ export interface Kans {
   blogId: string | null;
 }
 
+// Een productgroep of dienst die de analyse heeft onderzocht: hoeveel zoekwoorden erbij gevonden zijn en hoeveel kansen eruit kwamen.
+export interface Groep {
+  naam: string; // zoals de site het noemt ("Fatbikes")
+  term: string; // de zoekterm ("fatbike")
+  zoekwoorden: number;
+  volume: number | null; // som van het zoekvolume van de gevonden zoekwoorden (null zonder DataForSEO)
+  kansen: number;
+  eigen: boolean; // door jou toegevoegd bij Aanbod
+}
+
 export interface Kansenrapport {
   gemaakt: string;
   bron: "dataforseo" | "google";
@@ -129,6 +140,8 @@ export interface Kansenrapport {
   themas: { naam: string; uitleg: string }[];
   kansen: Kans[];
   melding: string | null;
+  groepen?: Groep[];
+  kosten?: number; // DataForSEO-kosten van deze analyse in dollars
 }
 
 export interface Logregel {

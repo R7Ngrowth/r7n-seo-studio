@@ -287,6 +287,25 @@ function Kaart({
               </div>
             </Blok>
           )}
+
+          {(p.anderen?.length ?? 0) > 0 && (
+            <Blok titel="Staan ook boven je, maar zijn geen concurrent" sub="Andere soorten bedrijven die op jouw zoekwoorden verschijnen. Hun categorieën en aanbod tellen niet mee in je kansen.">
+              <div className="space-y-2">
+                {p.anderen!.map((c) => (
+                  <div key={c.cid} className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted">
+                    <span className="min-w-0 flex-1 truncate font-medium text-text">{c.naam}</span>
+                    <span>{c.categorie}</span>
+                    <span>{c.boven}× boven je</span>
+                  </div>
+                ))}
+              </div>
+              {p.concurrenten.length === 0 && (
+                <p className="mt-3 text-xs text-muted">
+                  Er staat geen bedrijf van jouw soort boven je. Verschijnen er vooral andere soorten bedrijven, kijk dan bij Profielen of je zoekwoorden kloppen met waarmee klanten jouw zaak zoeken.
+                </p>
+              )}
+            </Blok>
+          )}
         </>
       )}
     </div>
